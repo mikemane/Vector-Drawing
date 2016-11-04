@@ -1,0 +1,2 @@
+serviceClass: uk.ac.stand.cs.cs5001.gwttest.client.servicestubs.GetStateService
+path: 5FB531301C86555165A747450B958B36.gwt.rpc
