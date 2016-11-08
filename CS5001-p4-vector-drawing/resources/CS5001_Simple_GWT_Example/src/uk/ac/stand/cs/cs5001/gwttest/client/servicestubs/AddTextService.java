@@ -8,5 +8,5 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  */
 @RemoteServiceRelativePath("addText")
 public interface AddTextService extends RemoteService {
-  String addText(String text) throws IllegalArgumentException;
+    String addText(String text) throws IllegalArgumentException;
 }

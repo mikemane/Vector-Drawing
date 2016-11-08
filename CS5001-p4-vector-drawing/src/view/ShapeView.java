@@ -1,7 +1,7 @@
 package view;
 
 import controller.ShapeController;
-import model.ShapeFactory;
+import model.ShapeModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,14 +14,19 @@ import java.util.Observer;
 /**
  * Created by un4 on 04/11/16.
  */
-public class ShapeView implements Observer, ActionListener {
+public class ShapeView implements Observer, ActionListener, FileMenuDelegate {
 
     private static int FRAME_WIDTH = 500;
     private static int FRAME_HEIGHT = 500;
 
 
-    private ShapeFactory shapeFactory;
+    private ShapeModel shapeModel;
     private ShapeController shapeController;
+
+    ///delegates.
+    private FileMenuDelegate fileMenuDelegate;
+    private EditMenuDelegate editMenuDelegate;
+
 
     private JFrame mainFrame;
     private JPanel panel; // The main panel.
@@ -29,15 +34,12 @@ public class ShapeView implements Observer, ActionListener {
     private JMenuBar mainMenuBar;
 
 
-    public ShapeView(ShapeFactory shapeFactory, ShapeController shapeController) {
-        this.shapeFactory = shapeFactory;
+    public ShapeView(ShapeModel shapeModel, ShapeController shapeController) {
+        this.shapeModel = shapeModel;
         this.shapeController = shapeController;
 
         //SetUpMenuBar
-        mainMenuBar = new JMenuBar();
-        JMenu fileMenu = new JMenu("File");
-        fileMenu.add(createMenuItem("open", null, null));
-        mainMenuBar.add(fileMenu); // adds file menu.
+        mainMenuBar = new MainMenuBar();
 
         panel = new JPanel(new GridBagLayout());
         gridBagConstraints = new GridBagConstraints();
@@ -68,11 +70,18 @@ public class ShapeView implements Observer, ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
+        switch (actionEvent.getID()) {
 
+        }
     }
 
     @Override
     public void update(Observable observable, Object o) {
 
+    }
+
+    @Override
+    public void openFile() {
+        System.out.println("I am Michael");
     }
 }

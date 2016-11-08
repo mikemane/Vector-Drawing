@@ -13,21 +13,23 @@ abstract public class Shape extends Observable {
 
     /**
      * Constructor that takes in a parameter of a color. that sets the default color of the shape.
+     *
      * @param color
      */
-    public Shape(Color color){
+    public Shape(Color color) {
         this.color = color;
     }
 
     /**
      * This is a shape costructor that takes no parameter and sets the default color to blue.
      */
-    public Shape(){
+    public Shape() {
         this.color = DEFAULT_COLOR;
     }
 
     /**
      * Returns the color of the shape.
+     *
      * @return the color of the shape.
      */
     public Color getColor() {
@@ -37,7 +39,7 @@ abstract public class Shape extends Observable {
     /**
      * Updates Models preferences.
      */
-    private void update(){
+    private void update() {
         this.setChanged();
         this.notifyObservers();
     }

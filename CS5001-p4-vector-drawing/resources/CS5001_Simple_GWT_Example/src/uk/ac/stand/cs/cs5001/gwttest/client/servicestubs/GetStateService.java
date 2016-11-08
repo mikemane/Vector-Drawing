@@ -8,5 +8,5 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  */
 @RemoteServiceRelativePath("getState")
 public interface GetStateService extends RemoteService {
-  String getState(String dummy) throws IllegalArgumentException;
+    String getState(String dummy) throws IllegalArgumentException;
 }

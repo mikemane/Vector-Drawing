@@ -10,9 +10,9 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  */
 @SuppressWarnings("serial")
 public class GetStateServiceImpl extends RemoteServiceServlet implements GetStateService {
-	
-	public String getState(String dummy) throws IllegalArgumentException {
-		return MyModel.getInstance().getText();
-	}
+
+    public String getState(String dummy) throws IllegalArgumentException {
+        return MyModel.getInstance().getText();
+    }
 
 }

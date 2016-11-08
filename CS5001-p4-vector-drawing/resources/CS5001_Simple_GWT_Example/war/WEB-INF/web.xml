@@ -5,25 +5,28 @@
          version="2.5"
          xmlns="http://java.sun.com/xml/ns/javaee">
 
-  <!-- Servlets -->
-  <servlet>
-  	<servlet-name>getStateServlet</servlet-name>
-  	<servlet-class>uk.ac.stand.cs.cs5001.gwttest.server.serviceimpl.GetStateServiceImpl</servlet-class></servlet>
-  <servlet-mapping>
-  	<servlet-name>getStateServlet</servlet-name>
-  	<url-pattern>/cs5001_simple_gwt_example/getState</url-pattern></servlet-mapping>
-  <servlet>
-  	<servlet-name>addTextServlet</servlet-name>
-  	<servlet-class>uk.ac.stand.cs.cs5001.gwttest.server.serviceimpl.AddTextServiceImpl</servlet-class></servlet>
-  <servlet-mapping>
-  	<servlet-name>addTextServlet</servlet-name>
-  	<url-pattern>/cs5001_simple_gwt_example/addText</url-pattern></servlet-mapping>
-  
-  
-  
-  <!-- Default page to serve -->
-  <welcome-file-list>
-    <welcome-file>CS5001_Simple_GWT_Example.html</welcome-file>
-  </welcome-file-list>
+    <!-- Servlets -->
+    <servlet>
+        <servlet-name>getStateServlet</servlet-name>
+        <servlet-class>uk.ac.stand.cs.cs5001.gwttest.server.serviceimpl.GetStateServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>getStateServlet</servlet-name>
+        <url-pattern>/cs5001_simple_gwt_example/getState</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>addTextServlet</servlet-name>
+        <servlet-class>uk.ac.stand.cs.cs5001.gwttest.server.serviceimpl.AddTextServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>addTextServlet</servlet-name>
+        <url-pattern>/cs5001_simple_gwt_example/addText</url-pattern>
+    </servlet-mapping>
+
+
+    <!-- Default page to serve -->
+    <welcome-file-list>
+        <welcome-file>CS5001_Simple_GWT_Example.html</welcome-file>
+    </welcome-file-list>
 
 </web-app>

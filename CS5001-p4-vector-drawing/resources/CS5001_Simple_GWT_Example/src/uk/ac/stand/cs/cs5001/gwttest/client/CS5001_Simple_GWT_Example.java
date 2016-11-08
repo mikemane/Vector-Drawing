@@ -23,93 +23,91 @@ import com.google.gwt.user.client.ui.TextBox;
  */
 public class CS5001_Simple_GWT_Example implements EntryPoint {
 
-	/**
-	 * Create a remote service proxy to talk to the server-side Greeting service.
-	 */
+    /**
+     * Create a remote service proxy to talk to the server-side Greeting service.
+     */
 
-	private final GetStateServiceAsync getStateService = GWT.create(GetStateService.class);
-	private final AddTextServiceAsync addTextService = GWT.create(AddTextService.class);
-
-	
-	final Button addButton = new Button("Add Text");
-	final TextBox inputField = new TextBox();
-	final TextArea outputArea = new TextArea();
-
-	/**
-	 * This is the entry point method.
-	 */
-	public void onModuleLoad() {
-		setupComponents();
-		update();
-	}
+    private final GetStateServiceAsync getStateService = GWT.create(GetStateService.class);
+    private final AddTextServiceAsync addTextService = GWT.create(AddTextService.class);
 
 
-	
-	private void setupComponents(){
-		inputField.setText("");
-		inputField.setReadOnly(false);
-		outputArea.setReadOnly(true);
-		outputArea.setHeight("300px");
-		outputArea.setWidth("400px");
+    final Button addButton = new Button("Add Text");
+    final TextBox inputField = new TextBox();
+    final TextArea outputArea = new TextArea();
 
-		// We can add style names to widgets
-		addButton.addStyleName("sendButton");
-
-		// Add the nameField and sendButton to the RootPanel
-		// Use RootPanel.get() to get the entire body element
-		RootPanel.get("inputFieldContainer").add(inputField);
-		RootPanel.get("addButtonContainer").add(addButton);
-		RootPanel.get("outputAreaContainer").add(outputArea);
-
-		// Focus the cursor on the name field when the app loads
-		inputField.setFocus(true);
-		inputField.selectAll();
+    /**
+     * This is the entry point method.
+     */
+    public void onModuleLoad() {
+        setupComponents();
+        update();
+    }
 
 
+    private void setupComponents() {
+        inputField.setText("");
+        inputField.setReadOnly(false);
+        outputArea.setReadOnly(true);
+        outputArea.setHeight("300px");
+        outputArea.setWidth("400px");
 
-		// Add handler for addButton
-		addButton.addClickHandler(new ClickHandler(){
-			public void onClick(ClickEvent event) {
-				addText();
-			}
-		});
-		
-		// Add key listener for input field
-		inputField.addKeyPressHandler(new KeyPressHandler(){
-			public void onKeyPress(KeyPressEvent event) {
-				if(event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER){
-					addText();
-				}	
-			}
-			
-		});
-		
-	}
+        // We can add style names to widgets
+        addButton.addStyleName("sendButton");
 
-	
-	private void addText(){
-		addTextService.addText(inputField.getText(), new AsyncCallback<String>(){
-			public void onFailure(Throwable caught) {
-				System.err.println("addButton service call got failure");
-			}
+        // Add the nameField and sendButton to the RootPanel
+        // Use RootPanel.get() to get the entire body element
+        RootPanel.get("inputFieldContainer").add(inputField);
+        RootPanel.get("addButtonContainer").add(addButton);
+        RootPanel.get("outputAreaContainer").add(outputArea);
 
-			public void onSuccess(String result) {
-				inputField.setText("");
-				update();
-			}
-		});
-	}
-	
-	public void update(){
-		getStateService.getState("", new AsyncCallback<String>() {
-			public void onFailure(Throwable caught) {
-				System.err.println("getState failed");
-			}
+        // Focus the cursor on the name field when the app loads
+        inputField.setFocus(true);
+        inputField.selectAll();
 
-			public void onSuccess(String result) {
-				outputArea.setText(result);
-			}
-		});
-	}
-	
+
+        // Add handler for addButton
+        addButton.addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                addText();
+            }
+        });
+
+        // Add key listener for input field
+        inputField.addKeyPressHandler(new KeyPressHandler() {
+            public void onKeyPress(KeyPressEvent event) {
+                if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
+                    addText();
+                }
+            }
+
+        });
+
+    }
+
+
+    private void addText() {
+        addTextService.addText(inputField.getText(), new AsyncCallback<String>() {
+            public void onFailure(Throwable caught) {
+                System.err.println("addButton service call got failure");
+            }
+
+            public void onSuccess(String result) {
+                inputField.setText("");
+                update();
+            }
+        });
+    }
+
+    public void update() {
+        getStateService.getState("", new AsyncCallback<String>() {
+            public void onFailure(Throwable caught) {
+                System.err.println("getState failed");
+            }
+
+            public void onSuccess(String result) {
+                outputArea.setText(result);
+            }
+        });
+    }
+
 }

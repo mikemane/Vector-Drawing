@@ -10,10 +10,10 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  */
 @SuppressWarnings("serial")
 public class AddTextServiceImpl extends RemoteServiceServlet implements AddTextService {
-	
-	public String addText(String text) throws IllegalArgumentException {
-		MyModel.getInstance().addText(text);
-		return "Ok";
-	}
+
+    public String addText(String text) throws IllegalArgumentException {
+        MyModel.getInstance().addText(text);
+        return "Ok";
+    }
 
 }
