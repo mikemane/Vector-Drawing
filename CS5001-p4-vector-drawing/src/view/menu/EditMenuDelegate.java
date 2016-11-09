@@ -1,4 +1,4 @@
-package view;
+package view.menu;
 
 /**
  * Created by un4 on 07/11/16.

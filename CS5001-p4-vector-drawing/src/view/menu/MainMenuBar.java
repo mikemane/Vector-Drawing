@@ -1,10 +1,11 @@
-package view;
+package view.menu;
 
+import view.menu.EditMenu;
+import view.menu.EditMenuDelegate;
 import view.menu.FileMenu;
+import view.menu.FileMenuDelegate;
 
 import javax.swing.*;
-import java.awt.*;
-import java.io.File;
 
 /**
  * Created by un4 on 07/11/16.

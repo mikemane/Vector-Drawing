@@ -1,9 +1,16 @@
 package view;
 
-import controller.ShapeController;
 import model.ShapeModel;
+import view.menu.EditMenuDelegate;
+import view.menu.FileMenuDelegate;
+import view.menu.MainMenuBar;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JMenuItem;
+
+import view.canvas.Canvas;
+import view.sidebar.Sidebar;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,14 +21,13 @@ import java.util.Observer;
 /**
  * Created by un4 on 04/11/16.
  */
-public class ShapeView implements Observer, ActionListener, FileMenuDelegate {
+public class ShapeView implements Observer, ActionListener, FileMenuDelegate, EditMenuDelegate {
 
-    private static int FRAME_WIDTH = 500;
-    private static int FRAME_HEIGHT = 500;
+    private static int FRAME_WIDTH = 750;
+    private static int FRAME_HEIGHT = 750;
 
 
     private ShapeModel shapeModel;
-    private ShapeController shapeController;
 
     ///delegates.
     private FileMenuDelegate fileMenuDelegate;
@@ -29,35 +35,40 @@ public class ShapeView implements Observer, ActionListener, FileMenuDelegate {
 
 
     private JFrame mainFrame;
-    private JPanel panel; // The main panel.
-    private GridBagConstraints gridBagConstraints; // Constraints for the panel.
-    private JMenuBar mainMenuBar;
 
+    private MainPanel mainPanel;
+    private Canvas canvas;
+    private Sidebar sidebar;
 
-    public ShapeView(ShapeModel shapeModel, ShapeController shapeController) {
+    private MainMenuBar mainMenuBar;
+    /**
+     * Shape Mode
+     *
+     * @param shapeModel
+     */
+    public ShapeView(ShapeModel shapeModel) {
         this.shapeModel = shapeModel;
-        this.shapeController = shapeController;
 
         //SetUpMenuBar
         mainMenuBar = new MainMenuBar();
+        mainMenuBar.setFileMenuDelegate(this);
+        mainMenuBar.setEditMenuDelegate(this);
 
-        panel = new JPanel(new GridBagLayout());
-        gridBagConstraints = new GridBagConstraints();
+
+        mainPanel = new MainPanel();
+        mainPanel.setPreferredSize(new Dimension(FRAME_WIDTH,FRAME_HEIGHT));
+
         this.mainFrame = new JFrame("Vector Drawing");
+
         this.mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.mainFrame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
+        this.mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.mainFrame.setJMenuBar(this.mainMenuBar);
+        this.mainFrame.add(mainPanel);
+        this.mainFrame.pack();
         this.mainFrame.setVisible(true);
     }
 
-    private JPanel createPanel() {
-        JPanel panel = new JPanel();
-        return panel;
-    }
-
-    private void addMenuItem(JMenuItem menuItem) {
-        this.mainMenuBar.add(menuItem);
-    }
 
     private JMenuItem createMenuItem(String menuName, KeyEvent keyEvent, ActionListener actionListener) {
         JMenuItem menuItem = new JMenuItem(menuName);
@@ -80,8 +91,26 @@ public class ShapeView implements Observer, ActionListener, FileMenuDelegate {
 
     }
 
+
+    // Menu delegates
     @Override
     public void openFile() {
         System.out.println("I am Michael");
     }
+
+    @Override
+    public void saveFile() {
+
+    }
+
+    @Override
+    public boolean undoAction() {
+        return false;
+    }
+
+    @Override
+    public boolean redoAction() {
+        return false;
+    }
+
 }

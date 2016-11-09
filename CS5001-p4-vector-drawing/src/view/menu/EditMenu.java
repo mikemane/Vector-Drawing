@@ -1,4 +1,4 @@
-package view;
+package view.menu;
 
 import javax.swing.*;
 
@@ -10,6 +10,7 @@ public class EditMenu extends JMenu implements EditMenuDelegate {
 
     private JMenuItem undo;
     private JMenuItem redo;
+    private EditMenuDelegate editMenuDelegate;
 
 
     public EditMenu() {
@@ -20,8 +21,8 @@ public class EditMenu extends JMenu implements EditMenuDelegate {
     }
 
 
-    public void setFileMenuDelegate(FileMenuDelegate fileMenuDelegate) {
-
+    public void setEditMenuDelegate(EditMenuDelegate editMenuDelegate) {
+        this.editMenuDelegate = editMenuDelegate;
     }
 
     private void initMenus() {

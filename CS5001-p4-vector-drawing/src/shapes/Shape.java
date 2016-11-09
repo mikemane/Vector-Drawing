@@ -1,27 +1,35 @@
-package model;
+package shapes;
+
+import base.Rect;
 
 import java.awt.*;
-import java.util.Observable;
 
 /**
  * Created by un4 on 04/11/16.
  */
-abstract public class Shape extends Observable {
+abstract public class Shape implements Drawable {
 
     private static final Color DEFAULT_COLOR = Color.BLUE;
     private Color color;
+    protected Rect rect;
 
     /**
-     * Constructor that takes in a parameter of a color. that sets the default color of the shape.
+     * Sets the color and shape of the shape.
      *
      * @param color
+     * @param rect
      */
-    public Shape(Color color) {
+    public Shape(Rect rect, Color color) {
+        this.rect = rect;
         this.color = color;
     }
 
+    public Shape(Rect rect) {
+        this(rect, DEFAULT_COLOR);
+    }
+
     /**
-     * This is a shape costructor that takes no parameter and sets the default color to blue.
+     * This is a shape constructor that takes no parameter and sets the default color to blue.
      */
     public Shape() {
         this.color = DEFAULT_COLOR;
@@ -34,13 +42,5 @@ abstract public class Shape extends Observable {
      */
     public Color getColor() {
         return color;
-    }
-
-    /**
-     * Updates Models preferences.
-     */
-    private void update() {
-        this.setChanged();
-        this.notifyObservers();
     }
 }
