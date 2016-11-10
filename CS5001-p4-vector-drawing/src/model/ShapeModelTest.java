@@ -1,11 +1,14 @@
-package shapes;
+package model;
 
 import base.Rect;
 import model.ShapeModel;
 import shapes.Shape;
 import org.junit.Before;
 import org.junit.Test;
+import shapes.ShapeFactory;
+import shapes.ShapeType;
 
+import java.awt.*;
 import java.io.IOException;
 
 import static org.junit.Assert.*;
@@ -23,7 +26,7 @@ public class ShapeModelTest {
     public void initShapes() {
         shapeFactory = new ShapeFactory();
         shapeModel = new ShapeModel();
-        shape = shapeFactory.getShape(ShapeType.ELLIPSE, new Rect(0, 0, 0, 0));
+        shape = shapeFactory.getShape(ShapeType.ELLIPSE, new Rect(0, 0, 0, 0), Color.BLUE);
     }
 
 
@@ -40,7 +43,7 @@ public class ShapeModelTest {
         assertEquals(0, shapeModel.getSize());
         assertFalse(shapeModel.containsShape(shape));
         assertEquals(1, shapeModel.undoShapeSize());
-        assertTrue(shapeModel.undoRemoveShape());
+        assertTrue(shapeModel.undo());
     }
 
     @Test

@@ -9,8 +9,17 @@ import java.awt.*;
  */
 abstract public class Shape implements Drawable {
 
+    /**
+     * Default stroke value if none is set.
+     */
+    public static int DEFAULT_STROKE = 5;
+    /**
+     * Default color if none is set.
+     */
     private static final Color DEFAULT_COLOR = Color.BLUE;
     private Color color;
+    private Color strokeColor;
+    private int strokeWidth;
     protected Rect rect;
 
     /**
@@ -42,5 +51,26 @@ abstract public class Shape implements Drawable {
      */
     public Color getColor() {
         return color;
+    }
+
+    /**
+     * Sets the desired stroke width.
+     * @param strokeWidth desired stroke width.
+     */
+    public void setStrokeWidth(int strokeWidth) {
+        this.strokeWidth = strokeWidth;
+    }
+
+    /**
+     * Gets thr desired stroke width.
+     * @return the stroke width.
+     */
+    public int getStrokeWidth() {
+        return strokeWidth;
+    }
+
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 }

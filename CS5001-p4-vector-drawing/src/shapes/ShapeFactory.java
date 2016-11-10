@@ -1,6 +1,7 @@
 package shapes;
 
 import base.Rect;
+import org.junit.Before;
 
 import java.awt.*;
 
@@ -15,19 +16,23 @@ public class ShapeFactory {
      * @param shapeType the type of shape to return.
      * @return
      */
-    public shapes.Shape getShape(ShapeType shapeType, Rect rect) {
+    public shapes.Shape getShape(ShapeType shapeType, Rect rect, Color color) {
+        Shape shape = null;
         switch (shapeType) {
             case ELLIPSE:
-                return new Ellipse(rect);
+                shape = new Ellipse(rect);
+                break;
             case RECTANGLE:
-                return new shapes.Rectangle(rect);
-
+                shape = new shapes.Rectangle(rect);
+                break;
+            case LINE:
+                shape = new shapes.Line(rect);
+                break;
+            case HEXAGON:
+                shape =  new Hexagon();
+                break;
         }
-        return null;
+        shape.setColor(color);
+        return shape;
     }
-
-    public shapes.Shape getLine(Point start, Point end) {
-        return new Line(start, end);
-    }
-
 }

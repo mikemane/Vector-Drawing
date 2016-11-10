@@ -1,5 +1,6 @@
 package shapes;
 
+import base.Rect;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,17 +21,10 @@ public class LineTest {
     public void initLine() {
         start = new Point(10, 10);
         end = new Point(10, 10);
-        line = new Line(start, end);
+        Rect rect = new Rect(start,end);
+        line = new Line(rect);
     }
 
-    @Test
-    public void translate() throws Exception {
-        int x = 10;
-        int y = 15;
 
-        line.translate(x, y);
-        assertEquals(20, (int) line.getStart().getX());
-        assertEquals(25, (int) line.getStart().getY());
-    }
 
 }

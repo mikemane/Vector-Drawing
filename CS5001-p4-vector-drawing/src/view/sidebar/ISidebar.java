@@ -1,6 +1,7 @@
 package view.sidebar;
 
 import shapes.ShapeType;
+import java.awt.Color;
 
 /**
  * Created by un4 on 08/11/16.
@@ -13,6 +14,7 @@ public interface ISidebar {
      */
     void selectShape(ShapeType shapeType);
     void erase();
+    void changeColor(Color color);
 
 
 }

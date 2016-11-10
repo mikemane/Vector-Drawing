@@ -21,18 +21,13 @@ import java.util.Observer;
 /**
  * Created by un4 on 04/11/16.
  */
-public class ShapeView implements Observer, ActionListener, FileMenuDelegate, EditMenuDelegate {
+public class ShapeView implements Observer {
 
     private static int FRAME_WIDTH = 750;
     private static int FRAME_HEIGHT = 750;
 
 
     private ShapeModel shapeModel;
-
-    ///delegates.
-    private FileMenuDelegate fileMenuDelegate;
-    private EditMenuDelegate editMenuDelegate;
-
 
     private JFrame mainFrame;
 
@@ -41,6 +36,7 @@ public class ShapeView implements Observer, ActionListener, FileMenuDelegate, Ed
     private Sidebar sidebar;
 
     private MainMenuBar mainMenuBar;
+
     /**
      * Shape Mode
      *
@@ -51,15 +47,10 @@ public class ShapeView implements Observer, ActionListener, FileMenuDelegate, Ed
 
         //SetUpMenuBar
         mainMenuBar = new MainMenuBar();
-        mainMenuBar.setFileMenuDelegate(this);
-        mainMenuBar.setEditMenuDelegate(this);
-
-
-        mainPanel = new MainPanel();
-        mainPanel.setPreferredSize(new Dimension(FRAME_WIDTH,FRAME_HEIGHT));
+        mainPanel = new MainPanel(shapeModel);
+        mainPanel.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
 
         this.mainFrame = new JFrame("Vector Drawing");
-
         this.mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.mainFrame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
         this.mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -79,38 +70,10 @@ public class ShapeView implements Observer, ActionListener, FileMenuDelegate, Ed
         return menuItem;
     }
 
-    @Override
-    public void actionPerformed(ActionEvent actionEvent) {
-        switch (actionEvent.getID()) {
-
-        }
-    }
 
     @Override
     public void update(Observable observable, Object o) {
 
-    }
-
-
-    // Menu delegates
-    @Override
-    public void openFile() {
-        System.out.println("I am Michael");
-    }
-
-    @Override
-    public void saveFile() {
-
-    }
-
-    @Override
-    public boolean undoAction() {
-        return false;
-    }
-
-    @Override
-    public boolean redoAction() {
-        return false;
     }
 
 }

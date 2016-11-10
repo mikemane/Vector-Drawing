@@ -1,6 +1,8 @@
 package view;
 
+import model.ShapeModel;
 import view.sidebar.Sidebar;
+import view.sidebar.Topbar;
 
 import javax.swing.JPanel;
 import java.awt.*;
@@ -11,31 +13,27 @@ import java.awt.*;
 public class MainPanel extends JPanel {
 
     private view.canvas.Canvas canvas;
+    private Topbar topbar;
     private Sidebar sidebar;
-    private static final Insets insets = new Insets(0,0,0,0);
+    private static final Insets insets = new Insets(0, 0, 0, 0);
 
-    public MainPanel(){
+    public MainPanel(ShapeModel shapeModel) {
         this.setLayout(new BorderLayout());
-//        this.setBackground();
-        this.sidebar = new Sidebar();
+        this.setBackground(Color.WHITE);
+        this.canvas = new view.canvas.Canvas(shapeModel);
+        this.add(canvas, BorderLayout.CENTER);
+                this.sidebar = new Sidebar();
+        sidebar.setiSidebar(canvas);
         this.add(sidebar, BorderLayout.WEST);
-//        addComponent(this,sidebar,0,0,1,1,GridBagConstraints.CENTER,GridBagConstraints.BOTH);
-        this.canvas = new view.canvas.Canvas();
-        this.add(canvas,BorderLayout.CENTER);
+        this.topbar = new Topbar();
+        this.topbar.setiTopBar(canvas);
+        this.add(topbar,BorderLayout.NORTH);
+
     }
 
-//    private void addComponent(Container container, Component component,
-//                                     int gridx, int gridy, int gridwidth, int gridheight, int anchor,
-//                                     int fill) {
-//        this.constraints.gridwidth = gridwidth;
-//        this.constraints.gridheight = gridheight;
-//        this.constraints.gridy = gridy;
-//        this.constraints.gridx = gridx;
-//        this.constraints.anchor = anchor;
-//        this.constraints.fill = fill;
-//        this.constraints.insets = insets;
-//        container.add(component, this.constraints);
-//    }
+    public void setShapeModel(ShapeModel shapeModel){
+        this.canvas.setShapeModel(shapeModel);
+    }
 
 
     public view.canvas.Canvas getCanvas() {
