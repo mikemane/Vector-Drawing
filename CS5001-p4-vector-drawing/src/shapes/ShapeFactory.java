@@ -29,7 +29,7 @@ public class ShapeFactory {
                 shape = new shapes.Line(rect);
                 break;
             case HEXAGON:
-                shape =  new Hexagon();
+                shape = new Hexagon(rect);
                 break;
         }
         shape.setColor(color);

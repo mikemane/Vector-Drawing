@@ -2,6 +2,7 @@ package shapes;
 
 import sun.awt.resources.awt;
 
+import java.awt.*;
 import java.awt.Shape;
 
 /**
@@ -10,5 +11,9 @@ import java.awt.Shape;
 public interface Drawable {
 
     Shape getShape();
+
+    boolean contains(Point point);
+
+    void updateShape();
 
 }

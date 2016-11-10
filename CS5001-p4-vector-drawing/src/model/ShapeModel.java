@@ -78,7 +78,10 @@ public class ShapeModel extends Observable {
      *
      * @return
      */
-    public boolean undo() {
+    public boolean redo() {
+        if (this.undoShapes.isEmpty()) {
+            return false;
+        }
         Shape shape = (Shape) this.undoShapes.pop();
         if (shape != null) {
             this.shapeStack.add(shape);
@@ -87,7 +90,10 @@ public class ShapeModel extends Observable {
         return false;
     }
 
-    public boolean redo(){
+    public boolean undo() {
+        if (this.shapeStack.isEmpty()) {
+            return false;
+        }
         Shape shape = (Shape) this.shapeStack.pop();
         if (shape != null) {
             this.undoShapes.add(shape);
@@ -130,7 +136,13 @@ public class ShapeModel extends Observable {
     /**
      * Clears the shape stack.
      */
-    public void clear(){
+    public void clear() {
         this.getShapeStack().forEach(this::removeShape);
+    }
+
+    public void fill(Shape shape) {
+        if (containsShape(shape))
+            shape.setShouldFill(true);
+
     }
 }

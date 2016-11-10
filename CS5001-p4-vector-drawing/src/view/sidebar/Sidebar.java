@@ -21,6 +21,8 @@ public class Sidebar extends JPanel implements ActionListener {
     private JButton freeDrawing;
     private JButton hexagon;
     private JButton eraser;
+    private JButton fill;
+    //    private JButton move;
     private JButton chooseColor;
 
 
@@ -32,10 +34,12 @@ public class Sidebar extends JPanel implements ActionListener {
         this.rectangle = createButton("rectangle.png");
         this.ellipse = createButton("ellipse.png");
         this.line = createButton("line.png");
-        this.freeDrawing = createButton("brush.png");
+//        this.freeDrawing = createButton("brush.png");
+//        this.move = createButton("move.png");
         this.hexagon = createButton("hexagon.png");
-        this.eraser = createButton("erase.png");
+        this.eraser = createButton("trash.png");
         this.chooseColor = createButton("colorpallet.png");
+        this.fill = createButton("paint.png");
     }
 
     /**
@@ -77,10 +81,17 @@ public class Sidebar extends JPanel implements ActionListener {
             iSidebar.selectShape(ShapeType.ELLIPSE);
         if (source == line)
             iSidebar.selectShape(ShapeType.LINE);
-        if (source == freeDrawing)
-            iSidebar.selectShape(ShapeType.PATH);
+//        if (source == freeDrawing)
+//            iSidebar.selectShape(ShapeType.PATH);
         if (source == hexagon)
             iSidebar.selectShape(ShapeType.HEXAGON);
+//        if (source == move)
+//            iSidebar.move();
+        if (source == fill)
+            iSidebar.performAction(PaintAction.FILL);
+        if (source == eraser) {
+            iSidebar.performAction(PaintAction.DELETE);
+        }
         if (source == chooseColor) {
             Color color = JColorChooser.showDialog(null, "Pick a color", Color.BLACK);
             this.iSidebar.changeColor(color);

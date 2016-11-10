@@ -2,6 +2,7 @@ package shapes;
 
 import java.awt.*;
 import java.awt.geom.GeneralPath;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 
 /**
@@ -42,19 +43,37 @@ public class Path extends Shape {
 
     /**
      * Returns a linked hash set of paths.
+     *
      * @return
      */
     public LinkedHashSet<Point> getPoints() {
         return points;
     }
 
-    public GeneralPath getDrawablePath(){
+    public GeneralPath getDrawablePath() {
         GeneralPath path = new GeneralPath();
         return path;
     }
 
     @Override
     public java.awt.Shape getShape() {
+//        Polyli
         return null;
+    }
+
+    @Override
+    public boolean contains(Point point) {
+        return this.getShape().contains(point);
+    }
+
+    @Override
+    public void updateShape() {
+
+    }
+
+    public Point[] getPointsArray() {
+        Point[] points = new Point[this.points.size()];
+        this.points.toArray(points);
+        return points;
     }
 }

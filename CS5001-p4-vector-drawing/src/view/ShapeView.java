@@ -50,6 +50,9 @@ public class ShapeView implements Observer {
         mainPanel = new MainPanel(shapeModel);
         mainPanel.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
 
+        mainMenuBar.setFileMenuDelegate(mainPanel.getCanvas());
+        mainMenuBar.setEditMenuDelegate(mainPanel.getCanvas());
+
         this.mainFrame = new JFrame("Vector Drawing");
         this.mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.mainFrame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
@@ -61,14 +64,7 @@ public class ShapeView implements Observer {
     }
 
 
-    private JMenuItem createMenuItem(String menuName, KeyEvent keyEvent, ActionListener actionListener) {
-        JMenuItem menuItem = new JMenuItem(menuName);
-        if (keyEvent != null) {
-            menuItem.setMnemonic(keyEvent.getKeyChar());
-        }
-        menuItem.addActionListener(actionListener);
-        return menuItem;
-    }
+
 
 
     @Override

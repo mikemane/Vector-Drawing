@@ -1,5 +1,7 @@
 package shapes;
 
+import base.Rect;
+
 import java.awt.*;
 
 /**
@@ -7,13 +9,41 @@ import java.awt.*;
  */
 public class Hexagon extends Shape {
 
+    private Polygon polygon;
+
+    public Hexagon(Rect rect) {
+        super(rect);
+    }
+
+    public void setPolygon(Polygon polygon) {
+        this.polygon = polygon;
+    }
+
 
     @Override
     public java.awt.Shape getShape() {
-//
+
+        int midx;
+        int firstY;
+        int secondY;
+
+        Polygon polygon = new Polygon();
+
+        //
 //        Polygon polygon = new Polygon();
 //        polygon.a
-        return null;
+        return polygon;
     }
+
+    @Override
+    public boolean contains(Point point) {
+        return this.getShape().contains(point);
+    }
+
+    @Override
+    public void updateShape() {
+
+    }
+
 }
 
