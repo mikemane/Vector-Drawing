@@ -34,6 +34,7 @@ public class Topbar extends JPanel {
         slider.setPaintTicks(true);
         slider.setSnapToTicks(true);
         slider.setValue(Shape.DEFAULT_STROKE);
+        sliderValue.setText(String.valueOf(Shape.DEFAULT_STROKE));
         this.add(slider);
         this.add(sliderValue);
     }

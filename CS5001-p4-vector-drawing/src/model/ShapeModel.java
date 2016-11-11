@@ -140,9 +140,12 @@ public class ShapeModel extends Observable {
         this.getShapeStack().forEach(this::removeShape);
     }
 
-    public void fill(Shape shape) {
-        if (containsShape(shape))
-            shape.setShouldFill(true);
-
+    /**
+     * Adds all the files to the current shape file.
+     *
+     * @param openedFiles opened files.
+     */
+    public void addAll(Stack<Shape> openedFiles) {
+        this.shapeStack.addAll(openedFiles);
     }
 }

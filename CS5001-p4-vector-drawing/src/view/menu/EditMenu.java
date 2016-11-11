@@ -13,6 +13,9 @@ public class EditMenu extends JMenu {
     private EditMenuDelegate editMenuDelegate;
 
 
+    /**
+     * Edit menu constructor.
+     */
     public EditMenu() {
         this.setText("Edit");
         this.undo = new JMenuItem("Un-do");
@@ -32,10 +35,17 @@ public class EditMenu extends JMenu {
     }
 
 
+    /**
+     * Sets the edit menu delegate to perform actions.
+     * @param editMenuDelegate the edit menu delegate
+     */
     public void setEditMenuDelegate(EditMenuDelegate editMenuDelegate) {
         this.editMenuDelegate = editMenuDelegate;
     }
 
+    /**
+     * Initialises the menu items.
+     */
     private void initMenus() {
         this.add(undo);
         this.add(redo);

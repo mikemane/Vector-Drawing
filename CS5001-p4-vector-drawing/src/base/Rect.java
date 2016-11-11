@@ -28,8 +28,6 @@ public class Rect {
     public Rect(Point origin, Point endPoint) {
         this.endPoint = endPoint;
         this.origin = origin;
-
-
         int width = Math.abs(origin.x - endPoint.x);
         int height = Math.abs(origin.y - endPoint.y);
         this.setWidth(width);

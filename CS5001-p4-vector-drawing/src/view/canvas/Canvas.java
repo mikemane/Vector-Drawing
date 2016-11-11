@@ -6,6 +6,8 @@ import shapes.Shape;
 import shapes.ShapeFactory;
 import shapes.ShapeType;
 import utils.ImageExporter;
+import utils.SaveFile;
+import utils.OpenFile;
 import view.menu.EditMenuAction;
 import view.menu.EditMenuDelegate;
 import view.menu.FileMenuAction;
@@ -24,9 +26,7 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.GeneralPath;
-import java.awt.image.BufferedImage;
-import java.io.File;
+import java.util.Stack;
 
 /**
  * Created by un4 on 08/11/16.
@@ -77,14 +77,15 @@ public class Canvas extends JComponent implements ISidebar, EditMenuDelegate, Fi
         this.graphics = graphics2D;
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 //        paintBackground(graphics2D);
-        Color[] colors = {Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.RED, Color.BLUE, Color.PINK};
         graphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
         this.shapeModel.getShapeStack().forEach(shape -> {
             graphics2D.setStroke(new BasicStroke(shape.getStrokeWidth()));
             graphics2D.setPaint(shape.getColor());
             graphics2D.draw(shape.getShape());
-            if (shape.isShouldFill())
+            if (shape.getFillColor() != null) {
+                graphics2D.setColor(shape.getFillColor());
                 graphics2D.fill(shape.getShape());
+            }
         });
 
         if (startDragging != null && endDragging != null && paintAction == null) {
@@ -143,6 +144,15 @@ public class Canvas extends JComponent implements ISidebar, EditMenuDelegate, Fi
         }
     }
 
+    /**
+     * Returns shape model.
+     *
+     * @return the shape model to be returned.
+     */
+    public ShapeModel getShapeModel() {
+        return shapeModel;
+    }
+
     @Override
     public void performEditAction(EditMenuAction action) {
         switch (action) {
@@ -155,51 +165,45 @@ public class Canvas extends JComponent implements ISidebar, EditMenuDelegate, Fi
         }
     }
 
+    /**
+     * Saves the file of the shape model.
+     */
     private void saveFile() {
+        SaveFile.SaveFile(this.shapeModel);
     }
 
+    /**
+     * Opens the model file.
+     */
     public void openFile() {
-
-    }
-
-    public void exportFile() {
-//        String path = JFileChooser.
-        JFileChooser fileChooser = new JFileChooser();
-        int saveAFile = fileChooser.showSaveDialog(fileChooser);
-        if (saveAFile == JFileChooser.APPROVE_OPTION) {
-//            BufferedImage bufferedImage = ImageExporter.createImage(this);
-            BufferedImage bufferedImage = new BufferedImage(getSize().width, getSize().height, BufferedImage.TYPE_4BYTE_ABGR);
-            Graphics2D saveGraphics = bufferedImage.createGraphics();
-            saveGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            saveGraphics.setColor(Color.white);
-            saveGraphics.fillRect(0, 0, getSize().width, getSize().height);
-            shapeModel.getShapeStack().forEach(shape -> {
-                saveGraphics.setStroke(new BasicStroke(shape.getStrokeWidth()));
-                saveGraphics.setPaint(shape.getColor());
-                saveGraphics.draw(shape.getShape());
-                if (shape.isShouldFill())
-                    saveGraphics.fill(shape.getShape());
-            });
-            //TODO save file here
-
-
-            File file = fileChooser.getSelectedFile();
-            ImageExporter.save(bufferedImage, file.toString(), ImageExporter.Filetype.PNG);
+        Stack<Shape> openedFiles = OpenFile.importShapes();
+        if (openedFiles != null) {
+            shapeModel.addAll(openedFiles);
+            repaint();
         }
     }
 
+    /**
+     * Exports the file as an image.
+     */
+    public void exportFile() {
+        ImageExporter.export(this);
+    }
 
-    public boolean undoAction() {
+    /**
+     * Undo the action.
+     *
+     * @return true if  the action is s
+     */
+    public void undoAction() {
         this.shapeModel.undo();
         this.repaint();
-        return true;
     }
 
 
-    public boolean redoAction() {
+    public void redoAction() {
         this.shapeModel.redo();
         this.repaint();
-        return true;
     }
 
     @Override
@@ -207,7 +211,11 @@ public class Canvas extends JComponent implements ISidebar, EditMenuDelegate, Fi
         this.strokeWidth = value;
     }
 
-
+    /**
+     * moves the shape.
+     *
+     * @param p shape to move.
+     */
     private void moveShape(Point p) {
         for (Shape s : shapeModel.getShapeStack()) {
             if (s.contains(p)) {
@@ -219,6 +227,11 @@ public class Canvas extends JComponent implements ISidebar, EditMenuDelegate, Fi
 
     }
 
+    /**
+     * removes a shape at a point.
+     *
+     * @param p the point.
+     */
     private void removeShape(Point p) {
         for (Shape shape : shapeModel.getShapeStack()) {
             if (shape.contains(p)) {
@@ -228,6 +241,12 @@ public class Canvas extends JComponent implements ISidebar, EditMenuDelegate, Fi
         }
     }
 
+    /**
+     * Performd a pait action.
+     *
+     * @param action action to be performed.
+     * @param point  point of interest.
+     */
     private void performAction(PaintAction action, Point point) {
         if (action == null) return;
         switch (action) {
@@ -246,7 +265,7 @@ public class Canvas extends JComponent implements ISidebar, EditMenuDelegate, Fi
     private void fillShape(Point point) {
         for (Shape shape : shapeModel.getShapeStack()) {
             if (shape.contains(point)) {
-                shapeModel.fill(shape);
+                shape.setFillColor(this.currentColor);
                 break;
             }
         }
@@ -290,7 +309,7 @@ public class Canvas extends JComponent implements ISidebar, EditMenuDelegate, Fi
 
     private Shape getShape(ShapeType shapeType, Point origin, Point end) {
         Rect rect = new Rect(origin, end);
-        Shape shape = shapeFactory.getShape(shapeType, rect, currentColor);
+        Shape shape = shapeFactory.getShape(shapeType, rect, currentColor, currentColor);
         return shape;
     }
 }

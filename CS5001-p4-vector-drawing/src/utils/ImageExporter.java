@@ -1,5 +1,8 @@
 package utils;
 
+import view.canvas.*;
+import view.canvas.Canvas;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -12,8 +15,11 @@ import java.io.IOException;
  */
 public class ImageExporter {
 
+    /**
+     * List Of all filetypes.
+     */
     public enum Filetype {
-        JPG, BMP, PNG;
+        JPG, BMP, PNG, SHP;
 
         public String extension() {
             switch (this) {
@@ -23,27 +29,53 @@ public class ImageExporter {
                     return "bmp";
                 case PNG:
                     return "png";
+                case SHP:
+                    return "shp";
             }
             return null;
         }
     }
 
-    public static BufferedImage createImage(JComponent panel) {
-        int w = panel.getWidth();
-        int h = panel.getHeight();
-        BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g = bi.createGraphics();
-        panel.paint(g);
-        return bi;
+    /**
+     * this takes in a canvas and export file.
+     *
+     * @param canvas the canvas to export.
+     * @return true if it is successful.
+     */
+    public static boolean export(Canvas canvas) {
+        JFileChooser fileChooser = new JFileChooser();
+        int saveAFile = fileChooser.showSaveDialog(fileChooser);
+        if (saveAFile == JFileChooser.APPROVE_OPTION) {
+            BufferedImage bufferedImage = new BufferedImage(canvas.getSize().width, canvas.getSize().height, BufferedImage.TYPE_4BYTE_ABGR);
+            Graphics2D saveGraphics = bufferedImage.createGraphics();
+            saveGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            saveGraphics.setColor(Color.white);
+            saveGraphics.fillRect(0, 0, canvas.getSize().width, canvas.getSize().height);
+            canvas.getShapeModel().getShapeStack().forEach(shape -> {
+                saveGraphics.setStroke(new BasicStroke(shape.getStrokeWidth()));
+                saveGraphics.setPaint(shape.getColor());
+                saveGraphics.draw(shape.getShape());
+                if (shape.getFillColor() != null) {
+                    saveGraphics.setColor(shape.getFillColor());
+                    saveGraphics.fill(shape.getShape());
+                }
+            });
+            File file = fileChooser.getSelectedFile();
+            return save(bufferedImage, file.toString(), ImageExporter.Filetype.PNG);
+        }
+        return false;
     }
 
-    public static void save(BufferedImage image, String fileName, Filetype ext) {
+
+    public static boolean save(BufferedImage image, String fileName, Filetype ext) {
         File file = new File(fileName + "." + ext.extension());
         try {
             ImageIO.write(image, ext.extension(), file);  // ignore returned boolean
+            return true;
         } catch (IOException e) {
             System.out.println("Write error for " + file.getPath() +
                     ": " + e.getMessage());
         }
+        return false;
     }
 }

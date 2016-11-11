@@ -5,6 +5,9 @@ package view.menu;
  */
 public enum FileMenuAction {
     OPEN,SAVE,EXPORT;
+    /**
+     * gets the associated name that belongs to the action.
+     */
     public String getName(){
         switch (this){
             case OPEN:

@@ -4,11 +4,13 @@ import base.Rect;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.io.BufferedWriter;
+import java.io.IOException;
 
 /**
  * Created by un4 on 04/11/16.
  */
-abstract public class Shape implements Drawable {
+abstract public class Shape implements Movable, Savable {
 
     /**
      * Default stroke value if none is set.
@@ -22,8 +24,7 @@ abstract public class Shape implements Drawable {
     private Color strokeColor;
     private int strokeWidth;
     protected Rect rect;
-    protected Shape shape;
-    protected boolean shouldFill;
+    protected java.awt.Shape shape;
     protected Color fillColor;
 
     /**
@@ -35,8 +36,6 @@ abstract public class Shape implements Drawable {
     public Shape(Rect rect, Color color, boolean shouldFill) {
         this.rect = rect;
         this.color = color;
-        this.shouldFill = shouldFill;
-        updateShape();
     }
 
     public Shape(Rect rect) {
@@ -81,26 +80,40 @@ abstract public class Shape implements Drawable {
         this.color = color;
     }
 
-    public void setShape(Shape shape) {
+    /**
+     * sets the stroke color.
+     *
+     * @param strokeColor the stroke color.
+     */
+    public void setStrokeColor(Color strokeColor) {
+        this.strokeColor = strokeColor;
+    }
+
+    /**
+     * Gets Stroke Color.
+     *
+     * @return get stroke color.
+     */
+    public Color getStrokeColor() {
+        return strokeColor;
+    }
+
+    /**
+     * sets the shape.
+     *
+     * @param shape the shape to set.
+     */
+    public void setShape(java.awt.Shape shape) {
         this.shape = shape;
     }
 
     /**
-     * should fill the shape.
+     * returns the shape.
      *
-     * @param shouldFill should fill.
+     * @return shape to return.
      */
-    public void setShouldFill(boolean shouldFill) {
-        this.shouldFill = shouldFill;
-    }
-
-    /**
-     * should fill the shape.
-     *
-     * @return should fill.
-     */
-    public boolean isShouldFill() {
-        return shouldFill;
+    public java.awt.Shape getShape() {
+        return shape;
     }
 
     /**
@@ -109,13 +122,71 @@ abstract public class Shape implements Drawable {
      * @param start start coordinates.
      * @param end   end coordinates.
      */
-    public void move(Point start, Point end) {
+    public abstract void move(Point start, Point end);
 
-        this.rect.setOrigin(new Point((end.x - start.x), this.rect.getOrigin().y + (end.y - start.y)));
-        this.rect.setHeight(this.rect.getWidth());
-        this.rect.setHeight(this.rect.getHeight());
-//        this.getRect().x + (endDrag.x - startDrag.x), this.getRect().y + (endDrag.y - startDrag.y), this.getRect().width, this.getRect().height)
-//        this.updateShape();
+    /**
+     * Checks if the shape contains the point,
+     *
+     * @param point the point to check.
+     * @return
+     */
+    @Override
+    public boolean contains(Point point) {
+        return this.getShape().contains(point);
     }
 
+    /**
+     * sets fill color of the shape.
+     *
+     * @param fillColor fill color to set.
+     */
+    public void setFillColor(Color fillColor) {
+        this.fillColor = fillColor;
+    }
+
+    /**
+     * gets fill color.
+     *
+     * @return the fill color of the shape.
+     */
+    public Color getFillColor() {
+        return fillColor;
+    }
+
+    /**
+     * returns the rect.
+     *
+     * @return
+     */
+    public Rect getRect() {
+        return rect;
+    }
+
+    @Override
+    public void writeToFile(BufferedWriter bufferedWriter) {
+        try {
+            StringBuilder stringbuilder = new StringBuilder();
+            stringbuilder.append(getClass().getSimpleName()).append(";")
+                    .append(getShape().getBounds().x).append(";")
+                    .append(getShape().getBounds().y).append(";")
+                    .append(getShape().getBounds().width).append(";")
+                    .append(getShape().getBounds().height).append(";")
+                    .append(getColor().getRed()).append(";")
+                    .append(getColor().getGreen()).append(";")
+                    .append(getColor().getBlue()).append(";");
+
+            if (strokeColor != null) {
+                stringbuilder.append(getStrokeColor().getBlue()).append(";")
+                        .append(getStrokeColor().getGreen()).append(";")
+                        .append(getStrokeColor().getBlue());
+            } else {
+                stringbuilder.append("null").append(";")
+                        .append("null").append(";")
+                        .append("null");
+            }
+            bufferedWriter.write(stringbuilder.toString());
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
 }

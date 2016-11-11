@@ -16,7 +16,7 @@ public class ShapeFactory {
      * @param shapeType the type of shape to return.
      * @return
      */
-    public shapes.Shape getShape(ShapeType shapeType, Rect rect, Color color) {
+    public shapes.Shape getShape(ShapeType shapeType, Rect rect, Color color, Color fillColor) {
         Shape shape = null;
         switch (shapeType) {
             case ELLIPSE:
@@ -33,6 +33,8 @@ public class ShapeFactory {
                 break;
         }
         shape.setColor(color);
+        if (fillColor != null)
+            shape.setFillColor(fillColor);
         return shape;
     }
 }

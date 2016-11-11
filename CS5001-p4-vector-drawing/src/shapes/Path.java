@@ -56,24 +56,19 @@ public class Path extends Shape {
     }
 
     @Override
-    public java.awt.Shape getShape() {
-//        Polyli
-        return null;
-    }
-
-    @Override
     public boolean contains(Point point) {
         return this.getShape().contains(point);
     }
 
-    @Override
-    public void updateShape() {
-
-    }
 
     public Point[] getPointsArray() {
         Point[] points = new Point[this.points.size()];
         this.points.toArray(points);
         return points;
+    }
+
+    @Override
+    public void move(Point start, Point end) {
+
     }
 }

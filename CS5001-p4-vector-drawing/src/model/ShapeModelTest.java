@@ -26,7 +26,10 @@ public class ShapeModelTest {
     public void initShapes() {
         shapeFactory = new ShapeFactory();
         shapeModel = new ShapeModel();
-        shape = shapeFactory.getShape(ShapeType.ELLIPSE, new Rect(0, 0, 0, 0), Color.BLUE);
+        Color a = Color.blue;
+        Color b = Color.BLACK;
+        shape = shapeFactory.getShape(ShapeType.ELLIPSE, new Rect(0, 0, 0, 0), a, b);
+        shapeModel.addShape(shape);
     }
 
 
@@ -38,7 +41,6 @@ public class ShapeModelTest {
 
     @Test
     public void removeShape() throws Exception {
-        shapeModel.addShape(shape);
         assertTrue(shapeModel.removeShape(shape));
         assertEquals(0, shapeModel.getSize());
         assertFalse(shapeModel.containsShape(shape));
@@ -54,6 +56,8 @@ public class ShapeModelTest {
 
     @Test
     public void undoRemoveShape() throws Exception {
-
+        assertTrue(shapeModel.undo());
+        assertEquals(0, shapeModel.getShapeStack().size());
+        assertFalse(shapeModel.containsShape(shape));
     }
 }
