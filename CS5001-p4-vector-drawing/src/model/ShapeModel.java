@@ -8,7 +8,6 @@ import java.util.*;
  * Created by un4 on 07/11/16.
  */
 public class ShapeModel extends Observable {
-
     private Stack<Shape> undoShapes;
     private Stack<Shape> shapeStack;
 
@@ -63,7 +62,7 @@ public class ShapeModel extends Observable {
     /**
      * Removes a shape from the list.
      *
-     * @param shape
+     * @param shape the shape to remove.
      */
     public boolean removeShape(Shape shape) {
         if (this.shapeStack.remove(shape)) {
@@ -76,7 +75,7 @@ public class ShapeModel extends Observable {
     /**
      * Performs an undo action.
      *
-     * @return
+     * @return true if action is done.
      */
     public boolean redo() {
         if (this.undoShapes.isEmpty()) {
@@ -90,6 +89,11 @@ public class ShapeModel extends Observable {
         return false;
     }
 
+    /**
+     * undo the action. checks if the shape is empty and remove from the undo stack and insert into the main stack.
+     *
+     * @return returns true if the problem was successful.
+     */
     public boolean undo() {
         if (this.shapeStack.isEmpty()) {
             return false;
@@ -105,13 +109,18 @@ public class ShapeModel extends Observable {
     /**
      * Returns the size of the shape stack.
      *
-     * @return
+     * @return the size of the getSize of the shape.
      */
     public int getSize() {
         return this.shapeStack.size();
     }
 
-
+    /**
+     * checks if the shape stack contains the value.
+     *
+     * @param shape the shape to be checked.
+     * @return true if the contains the shape.
+     */
     public boolean containsShape(Shape shape) {
         return this.shapeStack.contains(shape);
     }

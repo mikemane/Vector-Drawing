@@ -31,7 +31,7 @@ import java.util.Stack;
 /**
  * Created by un4 on 08/11/16.
  */
-public class Canvas extends JComponent implements ISidebar, EditMenuDelegate, FileMenuDelegate, ITopBar {
+public class PaintCanvas extends JComponent implements ISidebar, EditMenuDelegate, FileMenuDelegate, ITopBar {
 
     private MouseHandler mouseHandler = new MouseHandler();
     private Point endDragging;
@@ -44,10 +44,14 @@ public class Canvas extends JComponent implements ISidebar, EditMenuDelegate, Fi
     private ShapeFactory shapeFactory;
     private Shape tempShape;
     private PaintAction paintAction;
-    Graphics2D graphics;
 
 
-    public Canvas(ShapeModel shapeModel) {
+    /**
+     * This is a paont canvas and passes in a monad.
+     *
+     * @param shapeModel shape model to be passed ti eht paint canvas.
+     */
+    public PaintCanvas(ShapeModel shapeModel) {
         this.setBackground(Color.BLACK);
         this.addMouseListener(mouseHandler);
         this.addMouseMotionListener(mouseHandler);
@@ -58,25 +62,39 @@ public class Canvas extends JComponent implements ISidebar, EditMenuDelegate, Fi
         this.shapeFactory = new ShapeFactory();
     }
 
+    /**
+     * paint component to paint eht graphics.
+     *
+     * @param g graphics element.
+     */
     @Override
     protected void paintComponent(Graphics g) {
 //        g.drawImage(backgroundImage, 0, 0, null);
     }
 
+    /**
+     * setes the shape method.
+     *
+     * @param model thid the shape model.
+     */
     public void setShapeModel(ShapeModel model) {
         this.shapeModel = model;
     }
 
+    /**
+     * sets the shape type.
+     *
+     * @param shapeType
+     */
     public void setShapeType(ShapeType shapeType) {
         this.shapeType = shapeType;
     }
 
+
     @Override
     public void paint(Graphics g) {
         Graphics2D graphics2D = (Graphics2D) g;
-        this.graphics = graphics2D;
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-//        paintBackground(graphics2D);
         graphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
         this.shapeModel.getShapeStack().forEach(shape -> {
             graphics2D.setStroke(new BasicStroke(shape.getStrokeWidth()));
@@ -271,6 +289,9 @@ public class Canvas extends JComponent implements ISidebar, EditMenuDelegate, Fi
         }
     }
 
+    /**
+     * mouse listener to bbe extended.
+     */
     class MouseHandler extends MouseAdapter {
         @Override
         public void mousePressed(MouseEvent e) {
@@ -281,16 +302,25 @@ public class Canvas extends JComponent implements ISidebar, EditMenuDelegate, Fi
             repaint();
         }
 
+        /**
+         * When mouse is dragged my the mouse events.
+         *
+         * @param e mouse event.
+         */
         @Override
         public void mouseDragged(MouseEvent e) {
             endDragging = new Point(e.getX(), e.getY());
             repaint();
         }
 
+        /**
+         * this is when the mouse is released.
+         *
+         * @param e the event to be clicked on.
+         */
         @Override
         public void mouseReleased(MouseEvent e) {
             Point p = new Point(e.getX(), e.getY());
-
             if (paintAction == PaintAction.MOVE) {
                 if (tempShape.contains(p)) {
                     tempShape.move(startDragging, p);
@@ -307,6 +337,14 @@ public class Canvas extends JComponent implements ISidebar, EditMenuDelegate, Fi
         }
     }
 
+    /**
+     * gets the shape from the panel.
+     *
+     * @param shapeType the shape type to be created
+     * @param origin    the origin of the shape.
+     * @param end       the end of tjhe shape.
+     * @return the shape requested.
+     */
     private Shape getShape(ShapeType shapeType, Point origin, Point end) {
         Rect rect = new Rect(origin, end);
         Shape shape = shapeFactory.getShape(shapeType, rect, currentColor, currentColor);

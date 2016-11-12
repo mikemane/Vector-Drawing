@@ -6,11 +6,12 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * Created by un4 on 04/11/16.
  */
-abstract public class Shape implements Movable, Savable {
+abstract public class Shape implements Serializable {
 
     /**
      * Default stroke value if none is set.
@@ -20,24 +21,28 @@ abstract public class Shape implements Movable, Savable {
      * Default color if none is set.
      */
     private static final Color DEFAULT_COLOR = Color.BLUE;
-    private Color color;
-    private Color strokeColor;
+    private transient Color color;
     private int strokeWidth;
     protected Rect rect;
     protected java.awt.Shape shape;
-    protected Color fillColor;
+    protected transient Color fillColor;
 
     /**
      * Sets the color and shape of the shape.
      *
-     * @param color
-     * @param rect
+     * @param color this is the color to set in shape;
+     * @param rect  the rectangle being passed in,
      */
     public Shape(Rect rect, Color color, boolean shouldFill) {
         this.rect = rect;
         this.color = color;
     }
 
+    /**
+     * the shape cinstructor that sers the shape to the default type.
+     *
+     * @param rect the rectangle of the shape boundaries
+     */
     public Shape(Rect rect) {
         this(rect, DEFAULT_COLOR, false);
     }
@@ -81,24 +86,6 @@ abstract public class Shape implements Movable, Savable {
     }
 
     /**
-     * sets the stroke color.
-     *
-     * @param strokeColor the stroke color.
-     */
-    public void setStrokeColor(Color strokeColor) {
-        this.strokeColor = strokeColor;
-    }
-
-    /**
-     * Gets Stroke Color.
-     *
-     * @return get stroke color.
-     */
-    public Color getStrokeColor() {
-        return strokeColor;
-    }
-
-    /**
      * sets the shape.
      *
      * @param shape the shape to set.
@@ -130,7 +117,6 @@ abstract public class Shape implements Movable, Savable {
      * @param point the point to check.
      * @return
      */
-    @Override
     public boolean contains(Point point) {
         return this.getShape().contains(point);
     }
@@ -156,37 +142,39 @@ abstract public class Shape implements Movable, Savable {
     /**
      * returns the rect.
      *
-     * @return
+     * @return the rectangle boundaries of the shape.
      */
     public Rect getRect() {
         return rect;
     }
 
-    @Override
-    public void writeToFile(BufferedWriter bufferedWriter) {
-        try {
-            StringBuilder stringbuilder = new StringBuilder();
-            stringbuilder.append(getClass().getSimpleName()).append(";")
-                    .append(getShape().getBounds().x).append(";")
-                    .append(getShape().getBounds().y).append(";")
-                    .append(getShape().getBounds().width).append(";")
-                    .append(getShape().getBounds().height).append(";")
-                    .append(getColor().getRed()).append(";")
-                    .append(getColor().getGreen()).append(";")
-                    .append(getColor().getBlue()).append(";");
 
-            if (strokeColor != null) {
-                stringbuilder.append(getStrokeColor().getBlue()).append(";")
-                        .append(getStrokeColor().getGreen()).append(";")
-                        .append(getStrokeColor().getBlue());
-            } else {
-                stringbuilder.append("null").append(";")
-                        .append("null").append(";")
-                        .append("null");
-            }
-            bufferedWriter.write(stringbuilder.toString());
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
+    /**
+     * serializale;
+     *
+     * @return
+     */
+    @Override
+    public String toString() {
+        StringBuilder stringbuilder = new StringBuilder();
+        stringbuilder.append(getClass().getSimpleName()).append(";")
+                .append(getShape().getBounds().x).append(";")
+                .append(getShape().getBounds().y).append(";")
+                .append(getShape().getBounds().width).append(";")
+                .append(getShape().getBounds().height).append(";")
+                .append(getColor().getRed()).append(";")
+                .append(getColor().getGreen()).append(";")
+                .append(getColor().getBlue()).append(";");
+
+        if (fillColor != null) {
+            stringbuilder.append(getFillColor().getBlue()).append(";")
+                    .append(getFillColor().getGreen()).append(";")
+                    .append(getFillColor().getBlue());
+        } else {
+            stringbuilder.append("null").append(";")
+                    .append("null").append(";")
+                    .append("null");
         }
+        return stringbuilder.toString();
     }
 }

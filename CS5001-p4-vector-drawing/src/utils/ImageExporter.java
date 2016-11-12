@@ -1,7 +1,6 @@
 package utils;
 
-import view.canvas.*;
-import view.canvas.Canvas;
+import view.canvas.PaintCanvas;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -37,21 +36,21 @@ public class ImageExporter {
     }
 
     /**
-     * this takes in a canvas and export file.
+     * this takes in a paintCanvas and export file.
      *
-     * @param canvas the canvas to export.
+     * @param paintCanvas the paintCanvas to export.
      * @return true if it is successful.
      */
-    public static boolean export(Canvas canvas) {
+    public static boolean export(PaintCanvas paintCanvas) {
         JFileChooser fileChooser = new JFileChooser();
         int saveAFile = fileChooser.showSaveDialog(fileChooser);
         if (saveAFile == JFileChooser.APPROVE_OPTION) {
-            BufferedImage bufferedImage = new BufferedImage(canvas.getSize().width, canvas.getSize().height, BufferedImage.TYPE_4BYTE_ABGR);
+            BufferedImage bufferedImage = new BufferedImage(paintCanvas.getSize().width, paintCanvas.getSize().height, BufferedImage.TYPE_4BYTE_ABGR);
             Graphics2D saveGraphics = bufferedImage.createGraphics();
             saveGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             saveGraphics.setColor(Color.white);
-            saveGraphics.fillRect(0, 0, canvas.getSize().width, canvas.getSize().height);
-            canvas.getShapeModel().getShapeStack().forEach(shape -> {
+            saveGraphics.fillRect(0, 0, paintCanvas.getSize().width, paintCanvas.getSize().height);
+            paintCanvas.getShapeModel().getShapeStack().forEach(shape -> {
                 saveGraphics.setStroke(new BasicStroke(shape.getStrokeWidth()));
                 saveGraphics.setPaint(shape.getColor());
                 saveGraphics.draw(shape.getShape());

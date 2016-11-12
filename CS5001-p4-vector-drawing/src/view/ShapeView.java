@@ -1,20 +1,14 @@
 package view;
 
 import model.ShapeModel;
-import view.menu.EditMenuDelegate;
-import view.menu.FileMenuDelegate;
+import view.canvas.PaintCanvas;
 import view.menu.MainMenuBar;
 
 import javax.swing.JFrame;
-import javax.swing.JMenuItem;
 
-import view.canvas.Canvas;
 import view.sidebar.Sidebar;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -32,7 +26,7 @@ public class ShapeView implements Observer {
     private JFrame mainFrame;
 
     private MainPanel mainPanel;
-    private Canvas canvas;
+    private PaintCanvas paintCanvas;
     private Sidebar sidebar;
 
     private MainMenuBar mainMenuBar;
@@ -50,8 +44,8 @@ public class ShapeView implements Observer {
         mainPanel = new MainPanel(shapeModel);
         mainPanel.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
 
-        mainMenuBar.setFileMenuDelegate(mainPanel.getCanvas());
-        mainMenuBar.setEditMenuDelegate(mainPanel.getCanvas());
+        mainMenuBar.setFileMenuDelegate(mainPanel.getPaintCanvas());
+        mainMenuBar.setEditMenuDelegate(mainPanel.getPaintCanvas());
 
         this.mainFrame = new JFrame("Vector Drawing");
         this.mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

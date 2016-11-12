@@ -20,14 +20,13 @@ public class SaveFile {
     public static boolean SaveFile(ShapeModel shapeModel) {
         JFileChooser fileChooser = new JFileChooser();
         int approvedOption = fileChooser.showSaveDialog(fileChooser);
-//        String extension = fileChooser.getFileFilter().getDescription();
         if (approvedOption == JFileChooser.APPROVE_OPTION) {
             try {
                 FileOutputStream fi = new FileOutputStream(fileChooser.getSelectedFile() + ".shp");
                 OutputStreamWriter out = new OutputStreamWriter(fi);
                 BufferedWriter b = new BufferedWriter(out);
                 for (Shape shape : shapeModel.getShapeStack()) {
-                    shape.writeToFile(b);
+                    b.write(shape.toString());
                     b.newLine();
                 }
                 b.close();

@@ -14,7 +14,7 @@ public class ShapeFactory {
      * This factory takes a shape type as a parameter and returns a shape type.
      *
      * @param shapeType the type of shape to return.
-     * @return
+     * @return theh shape factory returns the shape type.
      */
     public shapes.Shape getShape(ShapeType shapeType, Rect rect, Color color, Color fillColor) {
         Shape shape = null;

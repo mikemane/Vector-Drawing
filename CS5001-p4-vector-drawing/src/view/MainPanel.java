@@ -1,6 +1,7 @@
 package view;
 
 import model.ShapeModel;
+import view.canvas.PaintCanvas;
 import view.sidebar.Sidebar;
 import view.sidebar.Topbar;
 
@@ -12,34 +13,53 @@ import java.awt.*;
  */
 public class MainPanel extends JPanel {
 
-    private view.canvas.Canvas canvas;
+    private PaintCanvas paintCanvas;
     private Topbar topbar;
     private Sidebar sidebar;
     private static final Insets insets = new Insets(0, 0, 0, 0);
 
+    /**
+     * Main panel that represents the collation of all other panel.
+     *
+     * @param shapeModel shape model.
+     */
     public MainPanel(ShapeModel shapeModel) {
         this.setLayout(new BorderLayout());
         this.setBackground(Color.WHITE);
-        this.canvas = new view.canvas.Canvas(shapeModel);
-        this.add(canvas, BorderLayout.CENTER);
-                this.sidebar = new Sidebar();
-        sidebar.setiSidebar(canvas);
+        this.paintCanvas = new PaintCanvas(shapeModel);
+        this.add(paintCanvas, BorderLayout.CENTER);
+        this.sidebar = new Sidebar();
+        sidebar.setiSidebar(paintCanvas);
         this.add(sidebar, BorderLayout.WEST);
         this.topbar = new Topbar();
-        this.topbar.setiTopBar(canvas);
-        this.add(topbar,BorderLayout.NORTH);
+        this.topbar.setiTopBar(paintCanvas);
+        this.add(topbar, BorderLayout.NORTH);
 
     }
 
-    public void setShapeModel(ShapeModel shapeModel){
-        this.canvas.setShapeModel(shapeModel);
+    /**
+     * sets shape model.
+     *
+     * @param shapeModel sets the shape model.
+     */
+    public void setShapeModel(ShapeModel shapeModel) {
+        this.paintCanvas.setShapeModel(shapeModel);
     }
 
-
-    public view.canvas.Canvas getCanvas() {
-        return canvas;
+    /**
+     * gets the paint canvas.
+     *
+     * @return the paint  canvas.
+     */
+    public PaintCanvas getPaintCanvas() {
+        return paintCanvas;
     }
 
+    /**
+     * Returns the sidebar.
+     *
+     * @return returns the side bar.
+     */
     public Sidebar getSidebar() {
         return sidebar;
     }
