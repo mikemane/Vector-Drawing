@@ -13,18 +13,36 @@ public class Rect {
     private int height;
 
 
+    /**
+     * This represented the bounds of the shape region.
+     * @param origin this is the origin boundaries.
+     * @param width this is width of the shape.
+     * @param height this represents the height of the shape.
+     */
     public Rect(Point origin, int width, int height) {
         this.origin = origin;
         this.height = height;
         this.width = width;
     }
 
+    /**
+     * this is  takes in a x and y position that denotes the origin and the width and height.
+     * @param x the x coordinate of the origin.
+     * @param y the y coordinate of the origin.
+     * @param width the width of the shape.
+     * @param height the height of the shape.
+     */
     public Rect(int x, int y, int width, int height) {
         this.origin = new Point(x, y);
         this.height = height;
         this.width = width;
     }
 
+    /**
+     * this takes in a start and an end point.
+     * @param origin this is the origin of the shape.
+     * @param endPoint
+     */
     public Rect(Point origin, Point endPoint) {
         this.endPoint = endPoint;
         this.origin = origin;
@@ -101,9 +119,9 @@ public class Rect {
     /**
      * Sets the heigth iof the rect.
      *
-     * @param heigth heigth to be set.
+     * @param height heigth to be set.
      */
-    public void setHeight(int heigth) {
+    public void setHeight(int height) {
         this.height = height;
     }
 
@@ -117,4 +135,9 @@ public class Rect {
         this.origin.translate(x, y);
     }
 
+
+    @Override
+    public String toString() {
+       return "origin x: " + getOrigin().x + " y:" + getOrigin().y + " width: " + getWidth() + " height: " + getHeight();
+    }
 }

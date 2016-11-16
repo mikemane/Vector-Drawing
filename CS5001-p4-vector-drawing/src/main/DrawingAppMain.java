@@ -1,5 +1,6 @@
 package main;
 
+import controller.ShapeController;
 import model.ShapeModel;
 import view.ShapeView;
 
@@ -17,8 +18,9 @@ public class DrawingAppMain {
         //Shape factory.
         ShapeModel shapeModel = new ShapeModel();
         //Shape Controller.
+        ShapeController shapeController = new ShapeController(shapeModel);
         // Shape view.
-        new ShapeView(shapeModel);
+        new ShapeView(shapeModel, shapeController);
 
 //        ShapeModel shapeModel = new ShapeModel();
 //        ShapeFactory factory = new ShapeFactory();

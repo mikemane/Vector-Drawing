@@ -10,7 +10,7 @@ public class EditMenu extends JMenu {
 
     private JMenuItem undo;
     private JMenuItem redo;
-    private EditMenuDelegate editMenuDelegate;
+    private IEditMenu IEditMenu;
 
 
     /**
@@ -22,13 +22,13 @@ public class EditMenu extends JMenu {
         this.redo = new JMenuItem("Re-do");
 
         undo.addActionListener(e -> {
-            if (editMenuDelegate != null) {
-                editMenuDelegate.performEditAction(EditMenuAction.UNDO);
+            if (IEditMenu != null) {
+                IEditMenu.performEditAction(EditMenuAction.UNDO);
             }
         });
         redo.addActionListener(e -> {
-            if (editMenuDelegate != null) {
-                editMenuDelegate.performEditAction(EditMenuAction.REDO);
+            if (IEditMenu != null) {
+                IEditMenu.performEditAction(EditMenuAction.REDO);
             }
         });
         initMenus();
@@ -37,10 +37,10 @@ public class EditMenu extends JMenu {
 
     /**
      * Sets the edit menu delegate to perform actions.
-     * @param editMenuDelegate the edit menu delegate
+     * @param IEditMenu the edit menu delegate
      */
-    public void setEditMenuDelegate(EditMenuDelegate editMenuDelegate) {
-        this.editMenuDelegate = editMenuDelegate;
+    public void setIEditMenu(IEditMenu IEditMenu) {
+        this.IEditMenu = IEditMenu;
     }
 
     /**

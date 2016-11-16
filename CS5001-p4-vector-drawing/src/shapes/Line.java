@@ -38,4 +38,9 @@ public class Line extends Shape {
         Line2D newline = new Line2D.Float(startPoint.x, startPoint.y, endPoint.x, endPoint.y);
         this.setShape(newline);
     }
+
+    @Override
+    public void updateShape() {
+
+    }
 }

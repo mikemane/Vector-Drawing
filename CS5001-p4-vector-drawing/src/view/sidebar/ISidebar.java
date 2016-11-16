@@ -16,8 +16,10 @@ public interface ISidebar {
      */
     void selectShape(ShapeType shapeType);
 
-    void changeColor(Color color);
+    void changeColor(Color color, boolean stroke);
 
     boolean performAction(PaintAction action);
+
+    void clearAll();
 
 }

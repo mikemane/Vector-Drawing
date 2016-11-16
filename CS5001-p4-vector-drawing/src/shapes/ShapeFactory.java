@@ -1,7 +1,6 @@
 package shapes;
 
 import base.Rect;
-import org.junit.Before;
 
 import java.awt.*;
 
@@ -16,7 +15,7 @@ public class ShapeFactory {
      * @param shapeType the type of shape to return.
      * @return theh shape factory returns the shape type.
      */
-    public shapes.Shape getShape(ShapeType shapeType, Rect rect, Color color, Color fillColor) {
+    public shapes.Shape getShape(ShapeType shapeType, Rect rect, Color strokeColor, Color fillColor) {
         Shape shape = null;
         switch (shapeType) {
             case ELLIPSE:
@@ -32,7 +31,8 @@ public class ShapeFactory {
                 shape = new Hexagon(rect);
                 break;
         }
-        shape.setColor(color);
+        if (strokeColor != null)
+            shape.setStrokeColor(strokeColor);
         if (fillColor != null)
             shape.setFillColor(fillColor);
         return shape;

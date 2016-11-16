@@ -1,5 +1,7 @@
 package utils;
 
+import shapes.*;
+import shapes.Shape;
 import view.canvas.PaintCanvas;
 
 import javax.imageio.ImageIO;
@@ -8,6 +10,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by un4 on 10/11/16.
@@ -50,9 +53,10 @@ public class ImageExporter {
             saveGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             saveGraphics.setColor(Color.white);
             saveGraphics.fillRect(0, 0, paintCanvas.getSize().width, paintCanvas.getSize().height);
-            paintCanvas.getShapeModel().getShapeStack().forEach(shape -> {
+            ArrayList<shapes.Shape> shapes = (ArrayList<Shape>) paintCanvas.getShapeModel().getShapeList().clone();
+            shapes.forEach(shape -> {
                 saveGraphics.setStroke(new BasicStroke(shape.getStrokeWidth()));
-                saveGraphics.setPaint(shape.getColor());
+                saveGraphics.setPaint(shape.getStrokeColor());
                 saveGraphics.draw(shape.getShape());
                 if (shape.getFillColor() != null) {
                     saveGraphics.setColor(shape.getFillColor());

@@ -1,10 +1,5 @@
 package view.menu;
 
-import view.menu.EditMenu;
-import view.menu.EditMenuDelegate;
-import view.menu.FileMenu;
-import view.menu.FileMenuDelegate;
-
 import javax.swing.*;
 
 /**
@@ -35,18 +30,18 @@ public class MainMenuBar extends JMenuBar {
 
     /**
      * sets the file menu delegate.
-     * @param fileMenuDelegate the file menu delegate.
+     * @param IFileMenu the file menu delegate.
      */
-    public void setFileMenuDelegate(FileMenuDelegate fileMenuDelegate) {
-        this.fileMenu.setFileMenuDelegate(fileMenuDelegate);
+    public void setFileMenuDelegate(IFileMenu IFileMenu) {
+        this.fileMenu.setIFileMenu(IFileMenu);
     }
 
     /**
      * this represents the edit menu delegate.
-     * @param editMenuDelegate the edit menu delegate.
+     * @param IEditMenu the edit menu delegate.
      */
-    public void setEditMenuDelegate(EditMenuDelegate editMenuDelegate) {
-        this.editMenu.setEditMenuDelegate(editMenuDelegate);
+    public void setEditMenuDelegate(IEditMenu IEditMenu) {
+        this.editMenu.setIEditMenu(IEditMenu);
     }
 
     /**

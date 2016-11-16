@@ -1,8 +1,6 @@
 package view.menu;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * Created by un4 on 07/11/16.
@@ -13,7 +11,7 @@ public class FileMenu extends JMenu {
     private JMenuItem openMenuItem;
     private JMenuItem saveMenuItem;
     private JMenuItem exportMenuItem;
-    private FileMenuDelegate fileMenuDelegate;
+    private IFileMenu IFileMenu;
 
     /**
      * This is the constructor of the file menu.
@@ -21,24 +19,24 @@ public class FileMenu extends JMenu {
     public FileMenu() {
         this.setText("File");
         this.openMenuItem = new JMenuItem("Open File");
-        this.saveMenuItem = new JMenuItem("Save Image");
+        this.saveMenuItem = new JMenuItem("Save File");
         this.exportMenuItem = new JMenuItem("Export Image");
         this.add(openMenuItem);
         this.add(saveMenuItem);
         this.add(exportMenuItem);
         this.openMenuItem.addActionListener(e -> {
-            if (fileMenuDelegate != null) {
-                fileMenuDelegate.performFileAction(FileMenuAction.OPEN);
+            if (IFileMenu != null) {
+                IFileMenu.performFileAction(FileMenuAction.OPEN);
             }
         });
         this.saveMenuItem.addActionListener(e -> {
-            if (fileMenuDelegate != null) {
-                fileMenuDelegate.performFileAction(FileMenuAction.SAVE);
+            if (IFileMenu != null) {
+                IFileMenu.performFileAction(FileMenuAction.SAVE);
             }
         });
         this.exportMenuItem.addActionListener(e -> {
-            if (fileMenuDelegate != null) {
-                fileMenuDelegate.performFileAction(FileMenuAction.EXPORT);
+            if (IFileMenu != null) {
+                IFileMenu.performFileAction(FileMenuAction.EXPORT);
             }
         });
     }
@@ -46,10 +44,10 @@ public class FileMenu extends JMenu {
     /**
      * this sets the file menu delegate.
      *
-     * @param fileMenuDelegate the file menu delegate to set.
+     * @param IFileMenu the file menu delegate to set.
      */
-    public void setFileMenuDelegate(FileMenuDelegate fileMenuDelegate) {
-        this.fileMenuDelegate = fileMenuDelegate;
+    public void setIFileMenu(IFileMenu IFileMenu) {
+        this.IFileMenu = IFileMenu;
     }
 
 }

@@ -22,8 +22,9 @@ public class Sidebar extends JPanel implements ActionListener {
     private JButton hexagon;
     private JButton eraser;
     private JButton fill;
-    //    private JButton move;
-    private JButton chooseColor;
+    private JButton move;
+    private JButton strokeShape;
+    private JButton clearAll;
 
 
     /**
@@ -34,12 +35,12 @@ public class Sidebar extends JPanel implements ActionListener {
         this.rectangle = createButton("rectangle.png");
         this.ellipse = createButton("ellipse.png");
         this.line = createButton("line.png");
-//        this.freeDrawing = createButton("brush.png");
-//        this.move = createButton("move.png");
         this.hexagon = createButton("hexagon.png");
         this.eraser = createButton("trash.png");
-        this.chooseColor = createButton("colorpallet.png");
+        this.move = createButton("move.png");
         this.fill = createButton("paint.png");
+        this.strokeShape = createButton("stroke.png");
+        this.clearAll = createButton("clear.png");
     }
 
     /**
@@ -77,24 +78,24 @@ public class Sidebar extends JPanel implements ActionListener {
         JButton source = (JButton) actionEvent.getSource();
         if (source == rectangle)
             iSidebar.selectShape(ShapeType.RECTANGLE);
-        if (source == ellipse)
+        else if (source == ellipse)
             iSidebar.selectShape(ShapeType.ELLIPSE);
-        if (source == line)
+        else if (source == line)
             iSidebar.selectShape(ShapeType.LINE);
-//        if (source == freeDrawing)
-//            iSidebar.selectShape(ShapeType.PATH);
-        if (source == hexagon)
+        else if (source == hexagon)
             iSidebar.selectShape(ShapeType.HEXAGON);
-//        if (source == move)
-//            iSidebar.move();
-        if (source == fill)
+        else if (source == move)
+            iSidebar.performAction(PaintAction.MOVE);
+        else if (source == fill) {
+            iSidebar.changeColor(JColorChooser.showDialog(null, "Pick a color", Color.BLACK), false);
             iSidebar.performAction(PaintAction.FILL);
-        if (source == eraser) {
+        } else if (source == strokeShape) {
+            iSidebar.changeColor(JColorChooser.showDialog(null, "Pick a color", Color.BLACK), true);
+            iSidebar.performAction(PaintAction.STROKESHAPE);
+        } else if (source == clearAll)
+            iSidebar.clearAll();
+        else if (source == eraser) {
             iSidebar.performAction(PaintAction.DELETE);
-        }
-        if (source == chooseColor) {
-            Color color = JColorChooser.showDialog(null, "Pick a color", Color.BLACK);
-            this.iSidebar.changeColor(color);
         }
     }
 }

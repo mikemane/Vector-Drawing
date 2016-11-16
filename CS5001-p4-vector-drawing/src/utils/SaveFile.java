@@ -3,7 +3,7 @@ package utils;
 import model.ShapeModel;
 import shapes.Shape;
 
-import javax.swing.*;
+import javax.swing.JFileChooser;
 import java.io.*;
 
 /**
@@ -25,7 +25,7 @@ public class SaveFile {
                 FileOutputStream fi = new FileOutputStream(fileChooser.getSelectedFile() + ".shp");
                 OutputStreamWriter out = new OutputStreamWriter(fi);
                 BufferedWriter b = new BufferedWriter(out);
-                for (Shape shape : shapeModel.getShapeStack()) {
+                for (Shape shape : shapeModel.getShapeList()) {
                     b.write(shape.toString());
                     b.newLine();
                 }
@@ -39,4 +39,24 @@ public class SaveFile {
     }
 
 
+    /**
+     * this writes to the file.
+     *
+     * @param model this is the model to write towards.
+     */
+    public static void WriteToFile(ShapeModel model) {
+        JFileChooser fileChooser = new JFileChooser();
+        int approvedOption = fileChooser.showSaveDialog(fileChooser);
+        if (approvedOption == JFileChooser.APPROVE_OPTION) {
+            try {
+                FileOutputStream fi = new FileOutputStream(fileChooser.getSelectedFile() + ".shp");
+                ObjectOutputStream oos = new ObjectOutputStream(fi);
+                oos.writeObject(model.getShapeList());
+                oos.close();
+                fi.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
 }

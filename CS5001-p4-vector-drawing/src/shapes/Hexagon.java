@@ -9,6 +9,7 @@ import java.awt.*;
  */
 public class Hexagon extends Shape {
 
+    private final int NUMBER_OF_SIDES = 6;
 
     /**
      * Hexagon Constructor.
@@ -17,43 +18,45 @@ public class Hexagon extends Shape {
      */
     public Hexagon(Rect rect) {
         super(rect);
-        makeShape(rect.getOrigin(), rect.getEndPoint());
+        if (rect.getEndPoint() == null) {
+            this.updateShape();
+        } else {
+            makeShape(rect.getOrigin(), rect.getEndPoint());
+        }
     }
 
 
+    /**
+     * makes a shape from two points.
+     *
+     * @param start    the start point.
+     * @param endPoint the end point.
+     */
     private void makeShape(Point start, Point endPoint) {
-        for (int i = 0; i < 6; i++) {
 
-        }
+        int minXPosition = Math.min(start.x, endPoint.x);
+        int minYPosition = Math.min(start.y, endPoint.y);
 
-        int midX = Math.abs(start.x + endPoint.x) / 2;
-        int quaterY = (int) (Math.abs(start.y + endPoint.y) * 0.25);
-        int tquaterY = (int) (Math.abs(start.y + endPoint.y) * 0.75);
-//
-////        Point a = new Point(midX, start.y);
-////
-////        //Quater side sides.
-////        Point b = new Point(start.x, quaterY);
-////        Point c = new Point(endPoint.x, quaterY);
-////
-////        // 3 Quaters sides.
-////        Point d = new Point(start.x, tquaterY);
-////        Point e = new Point(endPoint.x, tquaterY);
-//
-//        //
-//        Point f = new Point(midX, endPoint.y);
-
-        int[] xPositions = {midX, start.x, start.x, midX, endPoint.x, endPoint.x};
-        int[] yPositions = {start.y, quaterY, tquaterY, endPoint.y, tquaterY, quaterY};
-        Polygon polygon = new Polygon(xPositions, yPositions, xPositions.length);
-////        Polygon polygon = new Polygon();
-
+        int width = Math.abs(start.x - endPoint.x);
+        int height = Math.abs(start.y - endPoint.y);
+        Polygon polygon = createPolygon(minXPosition, minYPosition, width, height);
         this.setShape(polygon);
     }
 
-    @Override
-    public void move(Point start, Point end) {
+    private Polygon createPolygon(int minXPosition, int minYPosition, int width, int height) {
+        Polygon polygon = new Polygon();
+        for (int i = 0; i < NUMBER_OF_SIDES; i++) {
+            int x = (int) (minXPosition + width * Math.cos(i * 2 * Math.PI / NUMBER_OF_SIDES));
+            int y = (int) (minYPosition + height * Math.sin(i * 2 * Math.PI / NUMBER_OF_SIDES));
+            Point p = new Point(x, y);
+            polygon.addPoint(x, y);
+        }
+        return polygon;
+    }
 
+    @Override
+    public void updateShape() {
+        this.makeShape(getRect().getOrigin(), getRect().getEndPoint());
     }
 }
 

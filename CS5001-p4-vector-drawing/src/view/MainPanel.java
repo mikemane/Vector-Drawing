@@ -1,5 +1,6 @@
 package view;
 
+import controller.ShapeController;
 import model.ShapeModel;
 import view.canvas.PaintCanvas;
 import view.sidebar.Sidebar;
@@ -22,11 +23,12 @@ public class MainPanel extends JPanel {
      * Main panel that represents the collation of all other panel.
      *
      * @param shapeModel shape model.
+     * @param shapeController
      */
-    public MainPanel(ShapeModel shapeModel) {
+    public MainPanel(ShapeModel shapeModel, ShapeController shapeController) {
         this.setLayout(new BorderLayout());
         this.setBackground(Color.WHITE);
-        this.paintCanvas = new PaintCanvas(shapeModel);
+        this.paintCanvas = new PaintCanvas(shapeModel , shapeController);
         this.add(paintCanvas, BorderLayout.CENTER);
         this.sidebar = new Sidebar();
         sidebar.setiSidebar(paintCanvas);

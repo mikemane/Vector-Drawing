@@ -11,6 +11,8 @@ import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Stack;
 
 /**
@@ -20,15 +22,15 @@ public class OpenFile {
 
 
     /**
-     * impports a series of shapes.
+     * imporys a  series of shaps and adds it to rhe current pane or canvasa.
      *
      * @return the imported Shapes.
      */
-    public static Stack<Shape> importShapes() {
+    public static Collection<Shape> importShapes() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.addChoosableFileFilter(new ShpFilter());
         fileChooser.addChoosableFileFilter(new PNGFilter());
-        Stack<Shape> shapes = new Stack<>();
+        Collection<Shape> shapes = new ArrayList<>();
         ShapeFactory shapeFactory = new ShapeFactory();
         int option = fileChooser.showOpenDialog(null);
         if (option == JFileChooser.APPROVE_OPTION) {
@@ -58,6 +60,6 @@ public class OpenFile {
                 }
             }
         }
-        return null;
+        return shapes;
     }
 }

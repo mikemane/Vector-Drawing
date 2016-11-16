@@ -1,5 +1,6 @@
 package view;
 
+import controller.ShapeController;
 import model.ShapeModel;
 import view.canvas.PaintCanvas;
 import view.menu.MainMenuBar;
@@ -22,6 +23,7 @@ public class ShapeView implements Observer {
 
 
     private ShapeModel shapeModel;
+    private ShapeController shapeController;
 
     private JFrame mainFrame;
 
@@ -32,16 +34,15 @@ public class ShapeView implements Observer {
     private MainMenuBar mainMenuBar;
 
     /**
-     * Shape Mode
+     * Shape Mode.
      *
      * @param shapeModel
      */
-    public ShapeView(ShapeModel shapeModel) {
+    public ShapeView(ShapeModel shapeModel , ShapeController shapeController) {
         this.shapeModel = shapeModel;
-
         //SetUpMenuBar
         mainMenuBar = new MainMenuBar();
-        mainPanel = new MainPanel(shapeModel);
+        mainPanel = new MainPanel(shapeModel , shapeController);
         mainPanel.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
 
         mainMenuBar.setFileMenuDelegate(mainPanel.getPaintCanvas());

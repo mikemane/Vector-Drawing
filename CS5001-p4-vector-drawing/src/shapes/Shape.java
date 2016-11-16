@@ -3,39 +3,39 @@ package shapes;
 import base.Rect;
 
 import java.awt.*;
-import java.awt.geom.Rectangle2D;
-import java.io.BufferedWriter;
-import java.io.IOException;
 import java.io.Serializable;
 
 /**
  * Created by un4 on 04/11/16.
  */
-abstract public class Shape implements Serializable {
+abstract public class Shape implements Serializable, Cloneable {
 
     /**
      * Default stroke value if none is set.
      */
     public static int DEFAULT_STROKE = 5;
+    public static float DEFAULT_ALPHA = 1;
     /**
-     * Default color if none is set.
+     * Default strokeColor if none is set.
      */
     private static final Color DEFAULT_COLOR = Color.BLUE;
-    private transient Color color;
+    private transient Color strokeColor;
     private int strokeWidth;
     protected Rect rect;
     protected java.awt.Shape shape;
     protected transient Color fillColor;
+    protected float alpha;
 
     /**
-     * Sets the color and shape of the shape.
+     * Sets the strokeColor and shape of the shape.
      *
-     * @param color this is the color to set in shape;
-     * @param rect  the rectangle being passed in,
+     * @param strokeColor this is the strokeColor to set in shape;
+     * @param rect        the rectangle being passed in,
      */
-    public Shape(Rect rect, Color color, boolean shouldFill) {
+    public Shape(Rect rect, Color strokeColor, boolean shouldFill) {
         this.rect = rect;
-        this.color = color;
+        this.strokeColor = strokeColor;
+        this.alpha = DEFAULT_ALPHA;
     }
 
     /**
@@ -48,19 +48,28 @@ abstract public class Shape implements Serializable {
     }
 
     /**
-     * This is a shape constructor that takes no parameter and sets the default color to blue.
+     * This is a shape constructor that takes no parameter and sets the default strokeColor to blue.
      */
     public Shape() {
-        this.color = DEFAULT_COLOR;
+        this.strokeColor = DEFAULT_COLOR;
     }
 
     /**
-     * Returns the color of the shape.
+     * Returns the strokeColor of the shape.
      *
-     * @return the color of the shape.
+     * @return the strokeColor of the shape.
      */
-    public Color getColor() {
-        return color;
+    public Color getStrokeColor() {
+        return strokeColor;
+    }
+
+    /**
+     * sets the stroke color.
+     *
+     * @param strokeColor the stroke color to set.
+     */
+    public void setStrokeColor(Color strokeColor) {
+        this.strokeColor = strokeColor;
     }
 
     /**
@@ -81,9 +90,6 @@ abstract public class Shape implements Serializable {
         return strokeWidth;
     }
 
-    public void setColor(Color color) {
-        this.color = color;
-    }
 
     /**
      * sets the shape.
@@ -103,13 +109,6 @@ abstract public class Shape implements Serializable {
         return shape;
     }
 
-    /**
-     * Does a translation.
-     *
-     * @param start start coordinates.
-     * @param end   end coordinates.
-     */
-    public abstract void move(Point start, Point end);
 
     /**
      * Checks if the shape contains the point,
@@ -122,18 +121,18 @@ abstract public class Shape implements Serializable {
     }
 
     /**
-     * sets fill color of the shape.
+     * sets fill strokeColor of the shape.
      *
-     * @param fillColor fill color to set.
+     * @param fillColor fill strokeColor to set.
      */
     public void setFillColor(Color fillColor) {
         this.fillColor = fillColor;
     }
 
     /**
-     * gets fill color.
+     * gets fill strokeColor.
      *
-     * @return the fill color of the shape.
+     * @return the fill strokeColor of the shape.
      */
     public Color getFillColor() {
         return fillColor;
@@ -148,11 +147,45 @@ abstract public class Shape implements Serializable {
         return rect;
     }
 
+    /**
+     * this sets the alpha channel.
+     *
+     * @param alpha this is the alpha channel to this valuel
+     *              .
+     */
+    public void setAlpha(float alpha) {
+        this.alpha = alpha;
+    }
 
     /**
-     * serializale;
+     * this gets the alpha of  the shape.
      *
-     * @return
+     * @return this returns an int that denotes the alpha channel.
+     */
+    public float getAlpha() {
+        return alpha;
+    }
+
+    /**
+     * this does a movement of the shape.
+     *
+     * @param start the start move point.
+     * @param end   coordinates to move towards.
+     */
+    public void move(Point start, Point end) {
+        int newXPoint = getRect().getOrigin().x + end.x - start.x;
+        int newYPoint = getRect().getOrigin().y + end.y - start.y;
+        int newEXPoint = getRect().getEndPoint().x + end.x - start.x;
+        int newEYPoint = getRect().getEndPoint().y + end.y - start.y;
+        getRect().setOrigin(new Point(newXPoint, newYPoint));
+        getRect().setEndPoint(new Point(newEXPoint, newEYPoint));
+        this.updateShape();
+    }
+
+    /**
+     * this creates a well formarted string that is readable by the user.
+     *
+     * @return this returns a string valut that will make it easier for a user to read.
      */
     @Override
     public String toString() {
@@ -162,9 +195,9 @@ abstract public class Shape implements Serializable {
                 .append(getShape().getBounds().y).append(";")
                 .append(getShape().getBounds().width).append(";")
                 .append(getShape().getBounds().height).append(";")
-                .append(getColor().getRed()).append(";")
-                .append(getColor().getGreen()).append(";")
-                .append(getColor().getBlue()).append(";");
+                .append(getStrokeColor().getRed()).append(";")
+                .append(getStrokeColor().getGreen()).append(";")
+                .append(getStrokeColor().getBlue()).append(";");
 
         if (fillColor != null) {
             stringbuilder.append(getFillColor().getBlue()).append(";")
@@ -177,4 +210,25 @@ abstract public class Shape implements Serializable {
         }
         return stringbuilder.toString();
     }
+
+    /**
+     * Updates the shape when an action has been done to the shape.
+     */
+    public abstract void updateShape();
+
+    /**
+     * This just clones the shape and returns the shape.
+     *
+     * @return this is the return of the clone.
+     */
+    public Shape clone() {
+        try {
+            Shape clone = (Shape) super.clone();
+            return clone;
+        } catch (CloneNotSupportedException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
 }

@@ -10,40 +10,32 @@ import java.awt.geom.Rectangle2D;
  */
 public class Rectangle extends Shape {
 
-
+    /**
+     * Rectangle constructor that takes in a rect object that denotes the bounds.
+     *
+     * @param rect this is the rect of the rectangle.
+     */
     public Rectangle(Rect rect) {
         super(rect);
-        Point origin = rect.getOrigin();
-        Point endPoint = rect.getEndPoint();
-        makeObject(origin, endPoint);
+        if (rect.getEndPoint() == null) {
+            this.updateShape();
+        } else {
+            makeObject(rect.getOrigin(), rect.getEndPoint());
+        }
     }
 
-
     /**
-     * creates a rectangle object/.
-     *
-     * @param startDrag starting drag location.
-     * @param endDrag   the position of the end location.
+     * creates a rectangle object.
      */
-    public void makeObject(Point startDrag, Point endDrag) {
-        java.awt.Rectangle r = new java.awt.Rectangle(Math.min(startDrag.x, endDrag.x), Math.min(startDrag.y, endDrag.y), Math.abs(startDrag.x - endDrag.x), Math.abs(startDrag.y - endDrag.y));
+    public void makeObject(Point start, Point end) {
+        java.awt.Rectangle r = new java.awt.Rectangle(Math.min(start.x, end.x), Math.min(start.y, end.y), Math.abs(start.x - end.x), Math.abs(start.y - end.y));
         this.setShape(r);
     }
 
-    /**
-     * this moves the shape.
-     *
-     * @param start start coordinates.
-     * @param end   end coordinates.
-     */
+
     @Override
-    public void move(Point start, Point end) {
-        java.awt.Rectangle rectangle = (java.awt.Rectangle) getShape();
-        Point origin = new Point(rectangle.x + (end.x - start.x), rectangle.y + (end.y - start.y));
-        java.awt.Rectangle r = new java.awt.Rectangle(rectangle.x + (end.x - start.x), rectangle.y + (end.y - start.y), rectangle.width, rectangle.height);
-        this.rect.setHeight(r.height);
-        this.rect.setWidth(r.width);
-        this.rect.setOrigin(origin);
-        this.setShape(r);
+    public void updateShape() {
+        this.makeObject(getRect().getOrigin(), rect.getEndPoint());
     }
+
 }

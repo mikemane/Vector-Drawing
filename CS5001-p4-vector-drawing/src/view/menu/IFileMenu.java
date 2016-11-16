@@ -3,7 +3,7 @@ package view.menu;
 /**
  * Created by un4 on 07/11/16.
  */
-public interface FileMenuDelegate {
+public interface IFileMenu {
     /**
      * File interface that performs a file action.
      *

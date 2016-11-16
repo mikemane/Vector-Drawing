@@ -71,4 +71,9 @@ public class Path extends Shape {
     public void move(Point start, Point end) {
 
     }
+
+    @Override
+    public void updateShape() {
+
+    }
 }

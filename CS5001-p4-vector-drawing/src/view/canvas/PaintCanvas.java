@@ -1,6 +1,7 @@
 package view.canvas;
 
 import base.Rect;
+import controller.ShapeController;
 import model.ShapeModel;
 import shapes.Shape;
 import shapes.ShapeFactory;
@@ -9,9 +10,9 @@ import utils.ImageExporter;
 import utils.SaveFile;
 import utils.OpenFile;
 import view.menu.EditMenuAction;
-import view.menu.EditMenuDelegate;
+import view.menu.IEditMenu;
 import view.menu.FileMenuAction;
-import view.menu.FileMenuDelegate;
+import view.menu.IFileMenu;
 import view.sidebar.ISidebar;
 import view.sidebar.ITopBar;
 import view.sidebar.PaintAction;
@@ -26,41 +27,47 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Stack;
+import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Created by un4 on 08/11/16.
  */
-public class PaintCanvas extends JComponent implements ISidebar, EditMenuDelegate, FileMenuDelegate, ITopBar {
+public class PaintCanvas extends JComponent implements ISidebar, IEditMenu, IFileMenu, ITopBar, Observer {
 
     private MouseHandler mouseHandler = new MouseHandler();
     private Point endDragging;
     private Point startDragging;
     private ShapeModel shapeModel;
-    private Color currentColor;
-    private Shape currentShape;
+    private Color currentStrokeColor;
+    private Color currentFillColor;
     private int strokeWidth;
     private ShapeType shapeType;
     private ShapeFactory shapeFactory;
-    private Shape tempShape;
     private PaintAction paintAction;
+    private ShapeController shapeController;
 
 
     /**
      * This is a paont canvas and passes in a monad.
      *
-     * @param shapeModel shape model to be passed ti eht paint canvas.
+     * @param shapeModel      shape model to be passed ti eht paint canvas.
+     * @param shapeController
      */
-    public PaintCanvas(ShapeModel shapeModel) {
+    public PaintCanvas(ShapeModel shapeModel, ShapeController shapeController) {
         this.setBackground(Color.BLACK);
         this.addMouseListener(mouseHandler);
         this.addMouseMotionListener(mouseHandler);
         this.shapeModel = shapeModel;
+        this.shapeController = shapeController;
         this.shapeType = ShapeType.RECTANGLE;
-        this.currentColor = Color.BLACK;
+        this.currentStrokeColor = Color.BLACK;
         this.strokeWidth = Shape.DEFAULT_STROKE;
         this.shapeFactory = new ShapeFactory();
+        this.shapeModel.addObserver(this);
     }
+
 
     /**
      * paint component to paint eht graphics.
@@ -96,31 +103,52 @@ public class PaintCanvas extends JComponent implements ISidebar, EditMenuDelegat
         Graphics2D graphics2D = (Graphics2D) g;
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         graphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-        this.shapeModel.getShapeStack().forEach(shape -> {
-            graphics2D.setStroke(new BasicStroke(shape.getStrokeWidth()));
-            graphics2D.setPaint(shape.getColor());
-            graphics2D.draw(shape.getShape());
-            if (shape.getFillColor() != null) {
-                graphics2D.setColor(shape.getFillColor());
-                graphics2D.fill(shape.getShape());
-            }
-        });
+        this.shapeModel.getShapeList().forEach(shape -> drawShape(shape, graphics2D));
 
-        if (startDragging != null && endDragging != null && paintAction == null) {
-            // Makes the guide shape transparent
+        Shape shape = getShapeModel().getHighlightedShape();
+        if (shape != null && paintAction == null) {
             graphics2D.setComposite(AlphaComposite.getInstance(
                     AlphaComposite.SRC_OVER, 0.40f));
-            // Make guide shape gray for professional look
-            graphics2D.setStroke(new BasicStroke(this.strokeWidth));
-            graphics2D.setPaint(Color.LIGHT_GRAY);
-            Shape aShape = getShape(this.shapeType, startDragging, endDragging);
-            graphics2D.draw(aShape.getShape());
+            drawShape(shape, graphics2D);
+        } else if (paintAction == PaintAction.MOVE) {
+            shape = getShapeModel().getMovableShape();
+            if (shape != null) {
+                this.drawShape(shape, graphics2D);
+            }
         }
+    }
 
-        if (paintAction == PaintAction.MOVE) {
-            graphics2D.draw(tempShape.getShape());
+    /**
+     * gets the shape from the panel.
+     *
+     * @param shapeType     the shape type to be created
+     * @param startDragging the origin of the shape.
+     * @param endDragging   the end of the shape.
+     * @return the shape requested.
+     */
+    private Shape getShape(ShapeType shapeType, Point startDragging, Point endDragging) {
+
+        Rect rect = new Rect(startDragging, endDragging);
+        Shape shape = shapeFactory.getShape(shapeType, rect, currentStrokeColor, currentFillColor);
+        return shape;
+    }
+
+    /**
+     * this draws the shape based on the graphics.
+     *
+     * @param shape    the shape to be drawn.
+     * @param graphics the geaphics object that draws the shape.
+     */
+    private void drawShape(Shape shape, Graphics2D graphics) {
+        if (shape.getStrokeColor() != null)
+            graphics.setPaint(shape.getStrokeColor());
+        graphics.setStroke(new BasicStroke(shape.getStrokeWidth()));
+        graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, shape.getAlpha()));
+        graphics.draw(shape.getShape());
+        if (shape.getFillColor() != null) {
+            graphics.setColor(shape.getFillColor());
+            graphics.fill(shape.getShape());
         }
-
     }
 
     /**
@@ -135,11 +163,21 @@ public class PaintCanvas extends JComponent implements ISidebar, EditMenuDelegat
     }
 
     @Override
-    public void changeColor(Color color) {
-        this.currentColor = color;
+    public void changeColor(Color color, boolean stroke) {
+        if (stroke)
+            this.currentStrokeColor = color;
+        else
+            this.currentFillColor = color;
     }
 
 
+    /**
+     * Perform Paint actions.
+     * TODO Should be splitted to two actions. Mouse Actions and instant actions or something.
+     *
+     * @param action
+     * @return
+     */
     @Override
     public boolean performAction(PaintAction action) {
         this.paintAction = action;
@@ -147,6 +185,18 @@ public class PaintCanvas extends JComponent implements ISidebar, EditMenuDelegat
     }
 
 
+    @Override
+    public void clearAll() {
+        this.shapeController.clearAll();
+        this.repaint();
+    }
+
+
+    /**
+     * File menu actions.
+     *
+     * @param fileMenuAction file action to perform.
+     */
     @Override
     public void performFileAction(FileMenuAction fileMenuAction) {
         switch (fileMenuAction) {
@@ -187,18 +237,16 @@ public class PaintCanvas extends JComponent implements ISidebar, EditMenuDelegat
      * Saves the file of the shape model.
      */
     private void saveFile() {
-        SaveFile.SaveFile(this.shapeModel);
+//        SaveFile.SaveFile(this.shapeModel);
+        SaveFile.WriteToFile(this.shapeModel);
     }
 
     /**
      * Opens the model file.
      */
     public void openFile() {
-        Stack<Shape> openedFiles = OpenFile.importShapes();
-        if (openedFiles != null) {
-            shapeModel.addAll(openedFiles);
-            repaint();
-        }
+        ArrayList<Shape> openedFiles = (ArrayList<Shape>) OpenFile.importShapes();
+        shapeController.addShapes(openedFiles);
     }
 
     /**
@@ -214,13 +262,15 @@ public class PaintCanvas extends JComponent implements ISidebar, EditMenuDelegat
      * @return true if  the action is s
      */
     public void undoAction() {
-        this.shapeModel.undo();
+//        this.shapeModel.undo();
+        shapeController.undoAction();
         this.repaint();
     }
 
 
     public void redoAction() {
-        this.shapeModel.redo();
+        shapeController.redoAction();
+//        this.shapeModel.redo();
         this.repaint();
     }
 
@@ -234,15 +284,19 @@ public class PaintCanvas extends JComponent implements ISidebar, EditMenuDelegat
      *
      * @param p shape to move.
      */
-    private void moveShape(Point p) {
-        for (Shape s : shapeModel.getShapeStack()) {
-            if (s.contains(p)) {
-                tempShape = s;
-                shapeModel.removeShape(s);
-                break;
-            }
-        }
+    private void willMoveShape(Point p) {
+        this.shapeController.willMoveShapeAtPoint(p);
+//        this.tempShape = shape != null ? shape : null;
+    }
 
+    /**
+     * after shape has been moved.
+     *
+     * @param startDragging the start x pos.
+     * @param endDragging   the end position of the shape.
+     */
+    private void didMoveShape(Point startDragging, Point endDragging) {
+        this.shapeController.didMoveShapeToPoints(startDragging, endDragging);
     }
 
     /**
@@ -251,12 +305,7 @@ public class PaintCanvas extends JComponent implements ISidebar, EditMenuDelegat
      * @param p the point.
      */
     private void removeShape(Point p) {
-        for (Shape shape : shapeModel.getShapeStack()) {
-            if (shape.contains(p)) {
-                shapeModel.removeShape(shape);
-                break;
-            }
-        }
+        this.shapeController.removeShape(p);
     }
 
     /**
@@ -269,7 +318,7 @@ public class PaintCanvas extends JComponent implements ISidebar, EditMenuDelegat
         if (action == null) return;
         switch (action) {
             case MOVE:
-                this.moveShape(point);
+                this.willMoveShape(point);
                 break;
             case DELETE:
                 this.removeShape(point);
@@ -277,20 +326,43 @@ public class PaintCanvas extends JComponent implements ISidebar, EditMenuDelegat
             case FILL:
                 this.fillShape(point);
                 break;
-        }
-    }
-
-    private void fillShape(Point point) {
-        for (Shape shape : shapeModel.getShapeStack()) {
-            if (shape.contains(point)) {
-                shape.setFillColor(this.currentColor);
+            case STROKESHAPE:
+                this.strokeShape(point);
                 break;
-            }
         }
     }
 
     /**
-     * mouse listener to bbe extended.
+     * strokes a shape at the selected point.
+     *
+     * @param point
+     */
+    private void strokeShape(Point point) {
+        shapeController.stroke(point, this.currentStrokeColor);
+    }
+
+
+    /**
+     * TODO update controller.
+     *
+     * @param point
+     */
+    private void fillShape(Point point) {
+        this.shapeController.fill(point, this.currentFillColor);
+    }
+
+    @Override
+    public void update(Observable observable, Object o) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                repaint();
+            }
+        });
+    }
+
+    /**
+     * mouse listener to be extended.
      */
     class MouseHandler extends MouseAdapter {
         @Override
@@ -299,7 +371,6 @@ public class PaintCanvas extends JComponent implements ISidebar, EditMenuDelegat
             startDragging = new Point(e.getX(), e.getY());// e.getPoint();
             endDragging = startDragging;
             performAction(paintAction, startDragging);
-            repaint();
         }
 
         /**
@@ -309,8 +380,18 @@ public class PaintCanvas extends JComponent implements ISidebar, EditMenuDelegat
          */
         @Override
         public void mouseDragged(MouseEvent e) {
-            endDragging = new Point(e.getX(), e.getY());
-            repaint();
+            int x = e.getX();
+            int y = e.getY();
+            Point point = new Point(x, y);
+            endDragging = point;
+            if (paintAction == null)
+                shapeController.updateTempShape(shapeType, startDragging, point, strokeWidth);
+            else {
+                if (paintAction == PaintAction.MOVE) {
+                    shapeController.isMovingShape(startDragging, endDragging);
+                    startDragging = point;
+                }
+            }
         }
 
         /**
@@ -322,32 +403,14 @@ public class PaintCanvas extends JComponent implements ISidebar, EditMenuDelegat
         public void mouseReleased(MouseEvent e) {
             Point p = new Point(e.getX(), e.getY());
             if (paintAction == PaintAction.MOVE) {
-                if (tempShape.contains(p)) {
-                    tempShape.move(startDragging, p);
-                    shapeModel.addShape(tempShape);
-                }
+                didMoveShape(startDragging, p);
             } else if (paintAction == null) {
-                currentShape = getShape(shapeType, startDragging, endDragging);
-                currentShape.setStrokeWidth(strokeWidth);
-                shapeModel.addShape(currentShape);
+                shapeController.createShape(shapeType, startDragging, endDragging, currentStrokeColor, currentFillColor, strokeWidth);
             }
             startDragging = null;
             endDragging = null;
-            repaint();
         }
     }
 
-    /**
-     * gets the shape from the panel.
-     *
-     * @param shapeType the shape type to be created
-     * @param origin    the origin of the shape.
-     * @param end       the end of tjhe shape.
-     * @return the shape requested.
-     */
-    private Shape getShape(ShapeType shapeType, Point origin, Point end) {
-        Rect rect = new Rect(origin, end);
-        Shape shape = shapeFactory.getShape(shapeType, rect, currentColor, currentColor);
-        return shape;
-    }
+
 }
