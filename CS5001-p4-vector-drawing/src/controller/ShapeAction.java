@@ -26,7 +26,7 @@ public interface ShapeAction {
 
     void isMovingShape(Point start, Point end);
 
-    void didMoveShapeToPoints(Point start, Point end);
+    void didMoveShapeToPoints();
 
     boolean removeShape(Point point);
 

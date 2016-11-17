@@ -44,4 +44,9 @@ public class Ellipse extends Shape {
     public void updateShape() {
         this.makeShape(getRect().getOrigin(), getRect().getEndPoint());
     }
+
+    @Override
+    public ShapeType getShapeType() {
+        return ShapeType.ELLIPSE;
+    }
 }

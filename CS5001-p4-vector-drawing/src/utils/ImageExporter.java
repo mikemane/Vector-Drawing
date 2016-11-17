@@ -55,13 +55,19 @@ public class ImageExporter {
             saveGraphics.fillRect(0, 0, paintCanvas.getSize().width, paintCanvas.getSize().height);
             ArrayList<shapes.Shape> shapes = (ArrayList<Shape>) paintCanvas.getShapeModel().getShapeList().clone();
             shapes.forEach(shape -> {
-                saveGraphics.setStroke(new BasicStroke(shape.getStrokeWidth()));
-                saveGraphics.setPaint(shape.getStrokeColor());
-                saveGraphics.draw(shape.getShape());
-                if (shape.getFillColor() != null) {
-                    saveGraphics.setColor(shape.getFillColor());
-                    saveGraphics.fill(shape.getShape());
-                }
+                if (shape.getShapeType() != ShapeType.IMAGE) {
+                    saveGraphics.setStroke(new BasicStroke(shape.getStrokeWidth()));
+                    saveGraphics.setPaint(shape.getStrokeColor());
+                    saveGraphics.draw(shape.getShape());
+                    if (shape.getFillColor() != null) {
+                        saveGraphics.setColor(shape.getFillColor());
+                        saveGraphics.fill(shape.getShape());
+                    }
+                } else {
+                    ImageShape imageShape = (ImageShape) shape;
+                    Point a = shape.getRect().getOrigin();
+                    Point b = shape.getRect().getEndPoint();
+                    saveGraphics.drawImage(imageShape.getImage(), Math.min(a.x, a.x), Math.min(a.y, b.y), null);                }
             });
             File file = fileChooser.getSelectedFile();
             return save(bufferedImage, file.toString(), ImageExporter.Filetype.PNG);

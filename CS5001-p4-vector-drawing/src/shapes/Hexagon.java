@@ -58,5 +58,10 @@ public class Hexagon extends Shape {
     public void updateShape() {
         this.makeShape(getRect().getOrigin(), getRect().getEndPoint());
     }
+
+    @Override
+    public ShapeType getShapeType() {
+        return ShapeType.HEXAGON;
+    }
 }
 

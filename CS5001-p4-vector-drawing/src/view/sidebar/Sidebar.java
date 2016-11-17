@@ -15,6 +15,8 @@ public class Sidebar extends JPanel implements ActionListener {
     private static final int SIZE = 5;
     private ISidebar iSidebar;
 
+//    private final JButton rotate;
+    private final JButton scale;
     private JButton rectangle;
     private JButton ellipse;
     private JButton line;
@@ -31,16 +33,19 @@ public class Sidebar extends JPanel implements ActionListener {
      * Sidebar constructor.
      */
     public Sidebar() {
-        this.setLayout(new GridLayout(10, 3));
+        this.setLayout(new GridLayout(11, 3));
         this.rectangle = createButton("rectangle.png");
         this.ellipse = createButton("ellipse.png");
         this.line = createButton("line.png");
         this.hexagon = createButton("hexagon.png");
         this.eraser = createButton("trash.png");
         this.move = createButton("move.png");
+//        this.rotate = createButton("rotate.png");
+        this.scale = createButton("scale.png");
         this.fill = createButton("paint.png");
         this.strokeShape = createButton("stroke.png");
         this.clearAll = createButton("clear.png");
+
     }
 
     /**
@@ -76,25 +81,29 @@ public class Sidebar extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         JButton source = (JButton) actionEvent.getSource();
-        if (source == rectangle)
+        if (source == rectangle) {
             iSidebar.selectShape(ShapeType.RECTANGLE);
-        else if (source == ellipse)
+        } else if (source == ellipse) {
             iSidebar.selectShape(ShapeType.ELLIPSE);
-        else if (source == line)
+        } else if (source == line) {
             iSidebar.selectShape(ShapeType.LINE);
-        else if (source == hexagon)
+        } else if (source == hexagon) {
             iSidebar.selectShape(ShapeType.HEXAGON);
-        else if (source == move)
+        } else if (source == move) {
             iSidebar.performAction(PaintAction.MOVE);
-        else if (source == fill) {
+        } else if (source == fill) {
             iSidebar.changeColor(JColorChooser.showDialog(null, "Pick a color", Color.BLACK), false);
             iSidebar.performAction(PaintAction.FILL);
         } else if (source == strokeShape) {
             iSidebar.changeColor(JColorChooser.showDialog(null, "Pick a color", Color.BLACK), true);
             iSidebar.performAction(PaintAction.STROKESHAPE);
-        } else if (source == clearAll)
+        } else if (source == clearAll) {
             iSidebar.clearAll();
-        else if (source == eraser) {
+//        } else if (source == rotate) {
+//            iSidebar.performAction(PaintAction.ROTATE);
+        } else if (source == scale) {
+            iSidebar.performAction(PaintAction.SCALE);
+        } else if (source == eraser) {
             iSidebar.performAction(PaintAction.DELETE);
         }
     }

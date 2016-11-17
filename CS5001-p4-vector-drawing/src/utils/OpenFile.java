@@ -1,6 +1,7 @@
 package utils;
 
 import base.Rect;
+import shapes.ImageShape;
 import shapes.Shape;
 import shapes.ShapeFactory;
 import shapes.ShapeType;
@@ -13,6 +14,7 @@ import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Stack;
 
 /**
@@ -26,10 +28,17 @@ public class OpenFile {
      *
      * @return the imported Shapes.
      */
-    public static Collection<Shape> importShapes() {
+    private static JFileChooser fileChooser = fileChooser();
+
+
+    public static JFileChooser fileChooser() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.addChoosableFileFilter(new ShpFilter());
         fileChooser.addChoosableFileFilter(new PNGFilter());
+        return fileChooser;
+    }
+
+    public static Collection<Shape> importShapes() {
         Collection<Shape> shapes = new ArrayList<>();
         ShapeFactory shapeFactory = new ShapeFactory();
         int option = fileChooser.showOpenDialog(null);
@@ -62,4 +71,36 @@ public class OpenFile {
         }
         return shapes;
     }
+
+    public static ArrayList<Shape> readFile() {
+        ArrayList<Shape> shapes = null;
+        int option = fileChooser.showOpenDialog(null);
+        if (option == JFileChooser.APPROVE_OPTION) {
+            if (fileChooser.getSelectedFile().getName().endsWith(".shp")) {
+                try {
+                    ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(fileChooser.getSelectedFile()));
+                    shapes = (ArrayList<Shape>) objectInputStream.readObject();
+                } catch (IOException | ClassNotFoundException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+        return shapes;
+    }
+
+    public static String getAFilePath() {
+        ImageShape imageShape = null;
+        int option = fileChooser.showOpenDialog(null);
+        if (option == JFileChooser.APPROVE_OPTION) {
+            if (fileChooser.getSelectedFile().getName().endsWith(".png")) {
+                try {
+                    return fileChooser.getSelectedFile().getCanonicalPath();
+                } catch (IOException e) {
+                    return null;
+                }
+            }
+        }
+        return null;
+    }
+
 }

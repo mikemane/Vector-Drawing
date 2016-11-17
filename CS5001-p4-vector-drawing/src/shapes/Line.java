@@ -43,4 +43,9 @@ public class Line extends Shape {
     public void updateShape() {
 
     }
+
+    @Override
+    public ShapeType getShapeType() {
+        return ShapeType.LINE;
+    }
 }

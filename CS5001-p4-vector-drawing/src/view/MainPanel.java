@@ -22,21 +22,24 @@ public class MainPanel extends JPanel {
     /**
      * Main panel that represents the collation of all other panel.
      *
-     * @param shapeModel shape model.
+     * @param shapeModel      shape model.
      * @param shapeController
      */
     public MainPanel(ShapeModel shapeModel, ShapeController shapeController) {
         this.setLayout(new BorderLayout());
         this.setBackground(Color.WHITE);
-        this.paintCanvas = new PaintCanvas(shapeModel , shapeController);
+        this.paintCanvas = new PaintCanvas(shapeModel, shapeController);
         this.add(paintCanvas, BorderLayout.CENTER);
+
         this.sidebar = new Sidebar();
-        sidebar.setiSidebar(paintCanvas);
+        this.sidebar.setiSidebar(paintCanvas);
         this.add(sidebar, BorderLayout.WEST);
+
         this.topbar = new Topbar();
         this.topbar.setiTopBar(paintCanvas);
         this.add(topbar, BorderLayout.NORTH);
 
+        paintCanvas.setiColorChange(this.topbar);
     }
 
     /**

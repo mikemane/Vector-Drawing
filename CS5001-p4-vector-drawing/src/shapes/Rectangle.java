@@ -33,9 +33,15 @@ public class Rectangle extends Shape {
     }
 
 
+
     @Override
     public void updateShape() {
         this.makeObject(getRect().getOrigin(), rect.getEndPoint());
+    }
+
+    @Override
+    public ShapeType getShapeType() {
+        return ShapeType.RECTANGLE;
     }
 
 }

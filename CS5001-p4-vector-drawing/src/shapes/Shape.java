@@ -1,9 +1,11 @@
 package shapes;
 
 import base.Rect;
+import javafx.scene.transform.Affine;
 
 import java.awt.*;
-import java.io.Serializable;
+import java.awt.geom.AffineTransform;
+import java.io.*;
 
 /**
  * Created by un4 on 04/11/16.
@@ -18,13 +20,15 @@ abstract public class Shape implements Serializable, Cloneable {
     /**
      * Default strokeColor if none is set.
      */
-    private static final Color DEFAULT_COLOR = Color.BLUE;
-    private transient Color strokeColor;
+    public static final Color DEFAULT_COLOR = Color.WHITE;
+    public static final Color DEFAULT_STROKE_COLOR = Color.BLACK;
+    private Color strokeColor;
     private int strokeWidth;
     protected Rect rect;
     protected java.awt.Shape shape;
-    protected transient Color fillColor;
+    protected Color fillColor;
     protected float alpha;
+    protected AffineTransform transform;
 
     /**
      * Sets the strokeColor and shape of the shape.
@@ -32,19 +36,22 @@ abstract public class Shape implements Serializable, Cloneable {
      * @param strokeColor this is the strokeColor to set in shape;
      * @param rect        the rectangle being passed in,
      */
-    public Shape(Rect rect, Color strokeColor, boolean shouldFill) {
+    public Shape(Rect rect, Color strokeColor) {
         this.rect = rect;
         this.strokeColor = strokeColor;
         this.alpha = DEFAULT_ALPHA;
+        this.transform = new AffineTransform();
+//        this.transform.scale(2, 2);
+//        this.transform.rotate(Math.toRadians(45));
     }
 
     /**
-     * the shape cinstructor that sers the shape to the default type.
+     * the shape constructor that sets the shape shapes default parameters.
      *
      * @param rect the rectangle of the shape boundaries
      */
     public Shape(Rect rect) {
-        this(rect, DEFAULT_COLOR, false);
+        this(rect, DEFAULT_COLOR);
     }
 
     /**
@@ -183,7 +190,7 @@ abstract public class Shape implements Serializable, Cloneable {
     }
 
     /**
-     * this creates a well formarted string that is readable by the user.
+     * this creates a well formatted string that is readable by the user.
      *
      * @return this returns a string valut that will make it easier for a user to read.
      */
@@ -231,4 +238,66 @@ abstract public class Shape implements Serializable, Cloneable {
         }
     }
 
+    /**
+     * Performs a deep copy.
+     *
+     * @return the deep copy of the object.
+     */
+    public Shape deepCopy() {
+        ObjectOutputStream oos = null;
+        ObjectInputStream ois = null;
+        Shape shapeCopy = null;
+        try {
+            // deep copy
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            oos = new ObjectOutputStream(bos);
+            // serialize and pass the object
+            oos.writeObject(this);
+            oos.flush();
+            ByteArrayInputStream bin =
+                    new ByteArrayInputStream(bos.toByteArray());
+            ois = new ObjectInputStream(bin);
+            // return the new object
+            shapeCopy = (Shape) ois.readObject();
+            shapeCopy.setFillColor(this.fillColor);
+            shapeCopy.setStrokeColor(this.strokeColor);
+            oos.close();
+            oos.close();
+        } catch (IOException e) {
+            System.out.println("Exception in main = " + e);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return shapeCopy;
+    }
+
+    public void rotate(double theta) {
+        this.transform.rotate(theta);
+    }
+
+    private boolean isPositive(double number) {
+        return (number >= 0);
+    }
+
+    public void scale(int x, int y) {
+        int newEXPoint = getRect().getEndPoint().x + x; //end.x - start.x;
+        int newEYPoint = getRect().getEndPoint().y + y; //end.y - start.y;
+        getRect().setEndPoint(new Point(newEXPoint, newEYPoint));
+        this.updateShape();
+    }
+
+    public void setTransform(AffineTransform transform) {
+        this.transform = transform;
+    }
+
+    public AffineTransform getTransform() {
+        return transform;
+    }
+
+    /**
+     * This gets the shape type of the shape.
+     *
+     * @return this returns the shape type of the shape.
+     */
+    abstract public ShapeType getShapeType();
 }

@@ -2,11 +2,12 @@ package base;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.io.Serializable;
 
 /**
  * Created by un4 on 08/11/16.
  */
-public class Rect {
+public class Rect implements Serializable {
     private Point origin;
     private Point endPoint;
     private int width;
@@ -15,8 +16,9 @@ public class Rect {
 
     /**
      * This represented the bounds of the shape region.
+     *
      * @param origin this is the origin boundaries.
-     * @param width this is width of the shape.
+     * @param width  this is width of the shape.
      * @param height this represents the height of the shape.
      */
     public Rect(Point origin, int width, int height) {
@@ -27,20 +29,21 @@ public class Rect {
 
     /**
      * this is  takes in a x and y position that denotes the origin and the width and height.
-     * @param x the x coordinate of the origin.
-     * @param y the y coordinate of the origin.
-     * @param width the width of the shape.
-     * @param height the height of the shape.
+     *
+     * @param x  the x coordinate of the origin.
+     * @param y  the y coordinate of the origin.
+     * @param x2 the x2 of the shape.
+     * @param y2 the y2 of the shape.
      */
-    public Rect(int x, int y, int width, int height) {
+    public Rect(int x, int y, int x2, int y2) {
         this.origin = new Point(x, y);
-        this.height = height;
-        this.width = width;
+        this.endPoint = new Point(x2, y2);
     }
 
     /**
      * this takes in a start and an end point.
-     * @param origin this is the origin of the shape.
+     *
+     * @param origin   this is the origin of the shape.
      * @param endPoint
      */
     public Rect(Point origin, Point endPoint) {
@@ -138,6 +141,6 @@ public class Rect {
 
     @Override
     public String toString() {
-       return "origin x: " + getOrigin().x + " y:" + getOrigin().y + " width: " + getWidth() + " height: " + getHeight();
+        return "origin x: " + getOrigin().x + " y:" + getOrigin().y + " width: " + getWidth() + " height: " + getHeight();
     }
 }

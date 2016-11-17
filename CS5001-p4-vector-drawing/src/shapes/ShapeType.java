@@ -4,7 +4,7 @@ package shapes;
  * Created by un4 on 04/11/16.
  */
 public enum ShapeType {
-    LINE, ELLIPSE, RECTANGLE, HEXAGON, PATH, MOVE;
+    LINE, ELLIPSE, RECTANGLE, HEXAGON, IMAGE;
 
     public static ShapeType getTypeFromString(String value) {
         switch (value.toLowerCase()) {
@@ -16,6 +16,8 @@ public enum ShapeType {
                 return ELLIPSE;
             case "line":
                 return LINE;
+            case "img":
+                return IMAGE;
             default:
                 return null;
         }

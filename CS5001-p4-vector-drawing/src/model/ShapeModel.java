@@ -2,14 +2,14 @@ package model;
 
 import shapes.Shape;
 
-import java.awt.*;
+import java.awt.Point;
+import java.lang.reflect.Array;
 import java.util.*;
 
 /**
  * Created by un4 on 07/11/16.
  */
 public class ShapeModel extends Observable {
-
     private Stack<ArrayList<Shape>> redoShapeStack;
     private Stack<ArrayList<Shape>> undoShapeStack;
     private Shape movableShape;
@@ -43,16 +43,31 @@ public class ShapeModel extends Observable {
     }
 
 
+    /**
+     * This sets the highlighted Shape.
+     *
+     * @param highlightedShape this is the highlighted shape.
+     */
     public void setHighlightedShape(Shape highlightedShape) {
         this.highlightedShape = highlightedShape;
     }
 
+    /**
+     * This is the highlighted shape.
+     *
+     * @return
+     */
     public Shape getHighlightedShape() {
         return highlightedShape;
     }
 
+    /**
+     * This sets the movable shape to the value of the movable shape.
+     *
+     * @param movableShape this is the shape that is movable but it can also be null ro dereference it.
+     */
     public void setMovableShape(Shape movableShape) {
-        if (movableShape != null) movableShape.setAlpha((float)0.5);
+        if (movableShape != null) movableShape.setAlpha((float) 0.5);
         this.movableShape = movableShape;
     }
 
@@ -93,7 +108,7 @@ public class ShapeModel extends Observable {
      * @return the size of the getSize of the shape.
      */
     public int getSize() {
-        return this.redoShapeStack.size();
+        return this.getShapeList().size();
     }
 
     /**
@@ -167,7 +182,7 @@ public class ShapeModel extends Observable {
      * @return the current list of the shape stack or null if  the stack is empty.
      */
     public ArrayList<Shape> getShapeList() {
-        return this.getLastListOfStack(this.redoShapeStack);
+        return this.getTopElement(this.redoShapeStack);
     }
 
     /**
@@ -176,7 +191,7 @@ public class ShapeModel extends Observable {
      * @param shapeStack this is the shape stack to check and return the value.
      * @return this is the list that is returned.
      */
-    public ArrayList<Shape> getLastListOfStack(Stack<ArrayList<Shape>> shapeStack) {
+    public ArrayList<Shape> getTopElement(Stack<ArrayList<Shape>> shapeStack) {
         if (!shapeStack.isEmpty())
             return shapeStack.peek();
         return null;
@@ -186,7 +201,7 @@ public class ShapeModel extends Observable {
      * This clears the item in the shape.
      */
     public void clear() {
-        this.clearShapesFromStack(this.redoShapeStack, this.undoShapeStack);
+        this.redoShapeStack.add(new ArrayList<>());
     }
 
     /**
@@ -230,12 +245,24 @@ public class ShapeModel extends Observable {
         return null;
     }
 
+    /**
+     * this adds as list of shape to add.
+     *
+     * @param stack  this the stack to add the shapes to.
+     * @param shapes this is the list of shapes to add.
+     */
     private void addListOfShapesToStack(Stack<ArrayList<Shape>> stack, ArrayList<Shape> shapes) {
-        stack.add(shapes);
+        stack.push(shapes);
     }
 
+    /**
+     * this clears shapes from the stacks.
+     *
+     * @param shapeToClear shape to clear.
+     * @param stackToAdd   this is the stack to add.
+     */
     private void clearShapesFromStack(Stack<ArrayList<Shape>> shapeToClear, Stack<ArrayList<Shape>> stackToAdd) {
-        stackToAdd.addAll(shapeToClear);
+        shapeToClear.forEach(stackToAdd::push);
         shapeToClear.clear();
     }
 
@@ -254,9 +281,8 @@ public class ShapeModel extends Observable {
     }
 
     public void copyToUndo() {
-//        this.addListOfShapesToStack(this.getShapeList().clone(),this.redoShapeStack);
-        ArrayList<Shape> shapeArrayList = (ArrayList<Shape>) this.getShapeList().clone();
-        this.addListOfShapesToStack(this.redoShapeStack, shapeArrayList);
+        ArrayList<Shape> shapeArrayList = (ArrayList<Shape>) redoShapeStack.peek().clone();
+        this.redoShapeStack.push(shapeArrayList);
     }
 
     public Integer get(Shape shape) {
@@ -264,10 +290,30 @@ public class ShapeModel extends Observable {
         return (i >= 0) ? i : null;
     }
 
+    /**
+     * This returns the shape from the index.
+     *
+     * @param index this is the index that should be returned.
+     * @return this returns the shape at the index.
+     */
+    public Shape get(int index) {
+        return this.getShapeList().get(index);
+    }
+
+    /**
+     * this sets the last index variable.
+     *
+     * @param lastIndex this is the last index that shoild be returned.
+     */
     public void setLastIndex(Integer lastIndex) {
         this.lastIndex = lastIndex;
     }
 
+    /**
+     * this returns the last index.
+     *
+     * @return this returns the last index of the item.
+     */
     public Integer getLastIndex() {
         return lastIndex;
     }
