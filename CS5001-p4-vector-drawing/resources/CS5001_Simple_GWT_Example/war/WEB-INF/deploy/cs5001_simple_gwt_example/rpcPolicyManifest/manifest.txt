@@ -1,4 +1,0 @@
-# Module cs5001_simple_gwt_example
-# RPC service class, partial path of RPC policy file
-uk.ac.stand.cs.cs5001.gwttest.client.servicestubs.GetStateService, 5FB531301C86555165A747450B958B36.gwt.rpc
-uk.ac.stand.cs.cs5001.gwttest.client.servicestubs.AddTextService, 44C66CF73D7AFB448D4A76181C4BC69B.gwt.rpc
